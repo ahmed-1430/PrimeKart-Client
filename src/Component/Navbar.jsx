@@ -8,7 +8,7 @@ export default function Navbar() {
 
   return (
     <nav className="w-full bg-white shadow sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div className="w-11/12 mx-auto px-4 py-4 flex justify-between items-center">
 
         {/* Logo */}
         <h1 className="text-2xl font-bold text-[--color-primary]">
@@ -26,7 +26,7 @@ export default function Navbar() {
         {/* Login Button */}
         <Link 
           href="/login" 
-          className="hidden md:block bg-[--color-primary] text-white px-4 py-2 rounded">
+          className="hidden md:block bg-[--color-primary] px-4 py-2 rounded">
           Login
         </Link>
 
