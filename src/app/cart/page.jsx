@@ -1,10 +1,18 @@
 "use client";
+import { useAuth } from "@/Context/AuthContext";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+
+
+
 
 import { useCart } from "@/Context/CartContext";
 import Link from "next/link";
 
 export default function CartPage() {
     const { cart, increaseQty, decreaseQty, removeFromCart, cartTotal } = useCart();
+    const { user } = useAuth();
+const router = useRouter();
 
     return (
         <main className="w-11/12 mx-auto px-6 py-16">
@@ -90,9 +98,20 @@ export default function CartPage() {
                             <span>${(cartTotal + 5).toFixed(2)}</span>
                         </div>
 
-                        <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg text-lg font-semibold">
+                        <button
+                            onClick={() => {
+                                if (!user) {
+                                    toast.error("Please login to continue");
+                                    router.push("/login");
+                                } else {
+                                    router.push("/checkout");
+                                }
+                            }}
+                            className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg text-lg font-semibold"
+                        >
                             Checkout
                         </button>
+
                     </div>
                 </div>
             )}
