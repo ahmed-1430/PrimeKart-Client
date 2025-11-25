@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { auth, googleProvider } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "@/lib/FireBase.init";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -51,7 +51,8 @@ export function AuthProvider({ children }) {
         }
     };
 
-    const register = async ({ name, email, password }) => {
+    // FIXED: registerUser instead of register
+    const registerUser = async ({ name, email, password }) => {
         try {
             const res = await fetch("http://localhost:3000/users/register", {
                 method: "POST",
@@ -68,7 +69,6 @@ export function AuthProvider({ children }) {
         }
     };
 
-    // Google Login via Firebase
     const loginWithGoogle = async () => {
         try {
             const res = await signInWithPopup(auth, googleProvider);
@@ -82,7 +82,6 @@ export function AuthProvider({ children }) {
             };
 
             saveUser(googleUser);
-
             return { ok: true };
         } catch (error) {
             return { ok: false, message: error.message };
@@ -95,7 +94,7 @@ export function AuthProvider({ children }) {
                 user,
                 loading,
                 login,
-                register,
+                registerUser,
                 loginWithGoogle,
                 logout,
             }}
