@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
+import { useCart } from "@/Context/CartContext";
 
 export default function ProductDetailsPage() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const { cart, addToCart } = useCart();
 
   useEffect(() => {
     if (!id) return;
@@ -43,8 +45,11 @@ export default function ProductDetailsPage() {
     low: "bg-green-500",
   };
 
+  // Check if product already exists in cart
+  const isInCart = cart.some((item) => item._id === product._id);
+
   return (
-    <main className="max-w-7xl mx-auto px-6 py-16">
+    <main className="w-11/12 mx-auto py-16">
       {/* Breadcrumb */}
       <div className="mb-6 text-sm text-gray-600">
         <Link href="/" className="hover:text-purple-600">Home</Link> /
@@ -53,6 +58,7 @@ export default function ProductDetailsPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-12">
+        
         {/* Image Box */}
         <div className="bg-white rounded-2xl shadow-xl p-5 border border-gray-200">
           <img
@@ -86,8 +92,19 @@ export default function ProductDetailsPage() {
             ${product.price}
           </p>
 
-          <button className="mt-8 w-full bg-purple-600 hover:bg-purple-700 text-white py-4 rounded-xl text-lg font-semibold shadow-lg transition">
-            Add to Cart
+          {/* ADD TO CART BUTTON */}
+          <button
+            disabled={isInCart}
+            onClick={() => addToCart(product)}
+            className={`mt-8 w-full py-4 rounded-xl text-lg font-semibold shadow-lg transition
+              ${
+                isInCart
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-purple-600 hover:bg-purple-700 text-white"
+              }
+            `}
+          >
+            {isInCart ? "Added to Cart" : "Add to Cart"}
           </button>
         </div>
       </div>

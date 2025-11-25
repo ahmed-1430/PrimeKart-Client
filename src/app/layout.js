@@ -1,6 +1,7 @@
 import Navbar from "@/Component/Navbar";
 import "./globals.css";
 import Footer from "@/Component/Footer";
+import { CartProvider } from "@/Context/CartContext";
 
 export const metadata = {
   title: "PrimeKart",
@@ -11,9 +12,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Navbar />
-        {children}
-        <Footer />
+        <CartProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </CartProvider>
+
       </body>
     </html>
   );
