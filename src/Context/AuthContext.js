@@ -1,106 +1,106 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { auth, googleProvider } from "@/lib/firebase";
+import { signInWithPopup } from "firebase/auth";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
- 
-  //  Load user from localStorage on first render
+    useEffect(() => {
+        const stored = localStorage.getItem("primekart_user");
+        if (stored) {
+            try {
+                setUser(JSON.parse(stored));
+            } catch {
+                localStorage.removeItem("primekart_user");
+            }
+        }
+        setLoading(false);
+    }, []);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("primekart_user");
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch {
+    const saveUser = (u) => {
+        setUser(u);
+        localStorage.setItem("primekart_user", JSON.stringify(u));
+    };
+
+    const logout = () => {
+        setUser(null);
         localStorage.removeItem("primekart_user");
-      }
-    }
-    setLoading(false);
-  }, []);
+    };
 
-  // Save & Clear User
-  const saveUser = (userData) => {
-    setUser(userData);
-    localStorage.setItem("primekart_user", JSON.stringify(userData));
-  };
+    const login = async ({ email, password }) => {
+        try {
+            const res = await fetch("http://localhost:3000/users/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
 
-  const clearUser = () => {
-    setUser(null);
-    localStorage.removeItem("primekart_user");
-  };
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message);
 
-
-  //  LOGIN USER
-
-  const login = async ({ email, password }) => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
+            saveUser(data.user);
+            return { ok: true };
+        } catch (error) {
+            return { ok: false, message: error.message };
         }
-      );
+    };
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Invalid credentials");
+    const register = async ({ name, email, password }) => {
+        try {
+            const res = await fetch("http://localhost:3000/users/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, password }),
+            });
 
-      saveUser(data.user);
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message);
 
-      return { ok: true, user: data.user };
-    } catch (err) {
-      return { ok: false, message: err.message };
-    }
-  };
-
-
-  //  REGISTER USER
-
-  const register = async ({ name, email, password }) => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/register`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password }),
+            return { ok: true };
+        } catch (error) {
+            return { ok: false, message: error.message };
         }
-      );
+    };
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Registration failed");
+    // Google Login via Firebase
+    const loginWithGoogle = async () => {
+        try {
+            const res = await signInWithPopup(auth, googleProvider);
+            const profile = res.user;
 
-      return { ok: true, message: data.message };
-    } catch (err) {
-      return { ok: false, message: err.message };
-    }
-  };
+            const googleUser = {
+                id: profile.uid,
+                name: profile.displayName,
+                email: profile.email,
+                avatar: profile.photoURL,
+            };
 
+            saveUser(googleUser);
 
-  //  LOGOUT USER
+            return { ok: true };
+        } catch (error) {
+            return { ok: false, message: error.message };
+        }
+    };
 
-  const logout = () => {
-    clearUser();
-  };
-
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        loading,
-        login,
-        register,
-        logout,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+    return (
+        <AuthContext.Provider
+            value={{
+                user,
+                loading,
+                login,
+                register,
+                loginWithGoogle,
+                logout,
+            }}
+        >
+            {children}
+        </AuthContext.Provider>
+    );
 }
