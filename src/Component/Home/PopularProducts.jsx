@@ -65,8 +65,8 @@ export default function PopularProducts() {
                                     <div className="flex gap-2 mt-4">
                                         <Link href={`/products/${item._id}`} className="flex-1 bg-gray-200 hover:bg-gray-300 py-2 rounded-lg text-center font-medium">View</Link>
                                         <button disabled={inCart} onClick={() => addToCart(item)} className={`flex-1 py-2 rounded-lg text-white font-medium transition cursor-pointer ${inCart
-                                                ? "bg-gray-400 cursor-not-allowed"
-                                                : "bg-purple-600 hover:bg-purple-700"
+                                            ? "bg-gray-400 cursor-not-allowed"
+                                            : "bg-purple-600 hover:bg-purple-700"
                                             }
                       `}
                                         >

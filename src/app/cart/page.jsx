@@ -27,23 +27,18 @@ export default function CartPage() {
                     {/* LEFT — CART ITEMS */}
                     <div className="lg:col-span-2 space-y-6">
                         {cart.map((item) => (
-                            <div
-                                key={item._id}
-                                className="flex gap-6 bg-white p-5 rounded-xl shadow-md border border-gray-200"
-                            >
+                            <div key={item._id} className="flex flex-col sm:flex-row gap-6 bg-white p-5 rounded-xl shadow-md border border-gray-200">
                                 {/* Image */}
                                 <img
                                     src={item.imageUrl}
                                     alt={item.title}
-                                    className="w-32 h-32 rounded-lg object-cover"
+                                    className="w-28 h-28 sm:w-32 sm:h-32 rounded-lg object-cover mx-auto sm:mx-0"
                                 />
 
                                 {/* Info */}
                                 <div className="flex-1">
                                     <h2 className="text-xl font-semibold">{item.title}</h2>
-                                    <p className="text-gray-600 text-sm mt-1">
-                                        {item.shortDescription}
-                                    </p>
+                                    <p className="text-gray-600 text-sm mt-1">{item.shortDescription}</p>
 
                                     <p className="text-purple-600 font-bold text-xl mt-2">
                                         ${item.price}
@@ -58,9 +53,7 @@ export default function CartPage() {
                                             -
                                         </button>
 
-                                        <span className="text-lg font-semibold">
-                                            {item.quantity}
-                                        </span>
+                                        <span className="text-lg font-semibold">{item.quantity}</span>
 
                                         <button
                                             onClick={() => increaseQty(item._id)}
@@ -70,15 +63,9 @@ export default function CartPage() {
                                         </button>
                                     </div>
                                 </div>
-
-                                {/* Remove Button */}
-                                <button
-                                    onClick={() => removeFromCart(item._id)}
-                                    className="text-red-500 hover:text-red-600 text-sm font-semibold"
-                                >
-                                    Remove
-                                </button>
+                                <button onClick={() => removeFromCart(item._id)} className="text-red-500 hover:text-red-600 text-sm font-semibold sm:self-start sm:mt-0 mt-2 cursor-pointer">Remove</button>
                             </div>
+
                         ))}
                     </div>
 
