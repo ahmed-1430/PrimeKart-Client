@@ -9,7 +9,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   const { cart } = useCart();
-  const { user, logout } = useAuth(); // <-- AUTH CONTEXT
+  const { user, logout } = useAuth(); 
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -58,7 +58,7 @@ export default function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="bg-gradient-to-r from-purple-500 to-purple-700 px-5 py-2 rounded-lg text-white font-semibold shadow-lg hover:shadow-purple-500/30 hover:-translate-y-1 transition-all"
+              className="bg-linear-to-r from-purple-500 to-purple-700 px-5 py-2 rounded-lg text-white font-semibold shadow-lg hover:shadow-purple-500/30 hover:-translate-y-1 transition-all"
             >
               Login
             </Link>

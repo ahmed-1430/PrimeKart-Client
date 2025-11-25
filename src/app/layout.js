@@ -3,6 +3,7 @@ import "./globals.css";
 import Footer from "@/Component/Footer";
 import { CartProvider } from "@/Context/CartContext";
 import { AuthProvider } from "@/Context/AuthContext";
+import { ToastContainer } from "react-toastify";
 
 export const metadata = {
   title: "PrimeKart",
@@ -14,6 +15,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <AuthProvider>
+          <ToastContainer/>
           <CartProvider>
             <Navbar />
             {children}

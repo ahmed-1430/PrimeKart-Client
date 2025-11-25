@@ -2,17 +2,14 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-// Create the context
 const CartContext = createContext();
 
-// Hook for using the cart
 export const useCart = () => useContext(CartContext);
 
-// Provider
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
 
-  // Load cart from localStorage on first load
+  // Load cart from localStorage
   useEffect(() => {
     const savedCart = localStorage.getItem("primekart_cart");
     if (savedCart) {
@@ -20,16 +17,15 @@ export function CartProvider({ children }) {
     }
   }, []);
 
-  // Save cart to localStorage whenever cart changes
+  // Save cart to localStorage
   useEffect(() => {
     localStorage.setItem("primekart_cart", JSON.stringify(cart));
   }, [cart]);
 
-  // Add item to cart
+  // Add to cart
   const addToCart = (product) => {
     setCart((prev) => {
       const exists = prev.find((item) => item._id === product._id);
-
       if (exists) {
         return prev.map((item) =>
           item._id === product._id
@@ -37,7 +33,6 @@ export function CartProvider({ children }) {
             : item
         );
       }
-
       return [...prev, { ...product, quantity: 1 }];
     });
   };
@@ -69,7 +64,12 @@ export function CartProvider({ children }) {
     );
   };
 
-  // Calculate total price
+  //  Clear cart after checkout
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  // Total
   const cartTotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
@@ -84,6 +84,7 @@ export function CartProvider({ children }) {
         increaseQty,
         decreaseQty,
         cartTotal,
+        clearCart, 
       }}
     >
       {children}
