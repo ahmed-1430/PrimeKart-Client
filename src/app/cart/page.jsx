@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useAuth } from "@/Context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -40,7 +41,7 @@ const router = useRouter();
                                 <img
                                     src={item.imageUrl}
                                     alt={item.title}
-                                    className="w-28 h-28 sm:w-32 sm:h-32 rounded-lg object-cover mx-auto sm:mx-0"
+                                    className="w-28 h-28 sm:w-32 sm:h-32 rounded-lg object-fit mx-auto sm:mx-0"
                                 />
 
                                 {/* Info */}

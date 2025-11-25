@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -64,7 +65,7 @@ export default function ProductDetailsPage() {
           <img
             src={product.imageUrl}
             alt={product.title}
-            className="w-full h-[450px] object-cover rounded-xl"
+            className="w-full h-[450px] object-fit rounded-xl"
           />
         </div>
 
@@ -96,7 +97,7 @@ export default function ProductDetailsPage() {
           <button
             disabled={isInCart}
             onClick={() => addToCart(product)}
-            className={`mt-8 w-full py-4 rounded-xl text-lg font-semibold shadow-lg transition
+            className={`mt-8 w-full py-4 rounded-xl text-lg font-semibold shadow-lg transition cursor-pointer
               ${
                 isInCart
                   ? "bg-gray-400 cursor-not-allowed"
