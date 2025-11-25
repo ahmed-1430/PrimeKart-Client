@@ -1,80 +1,106 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
-
 export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    // load user from localStorage (persist across refresh)
-    useEffect(() => {
-        const raw = localStorage.getItem("primekart_user");
-        if (raw) {
-            try {
-                const parsed = JSON.parse(raw);
-                setUser(parsed);
-            } catch {
-                localStorage.removeItem("primekart_user");
-            }
-        }
-        setLoading(false);
-    }, []);
+ 
+  //  Load user from localStorage on first render
 
-    const saveUser = (u) => {
-        setUser(u);
-        localStorage.setItem("primekart_user", JSON.stringify(u));
-    };
-
-    const clearUser = () => {
-        setUser(null);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("primekart_user");
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch {
         localStorage.removeItem("primekart_user");
-    };
+      }
+    }
+    setLoading(false);
+  }, []);
 
-    // login: call your backend /users/login and save user object
-    const login = async ({ email, password }) => {
-        try {
-            const res = await fetch("/users/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.message || "Login failed");
-            // server returns user object in data.user
-            saveUser(data.user);
-            return { ok: true, user: data.user };
-        } catch (err) {
-            return { ok: false, message: err.message };
+  // Save & Clear User
+  const saveUser = (userData) => {
+    setUser(userData);
+    localStorage.setItem("primekart_user", JSON.stringify(userData));
+  };
+
+  const clearUser = () => {
+    setUser(null);
+    localStorage.removeItem("primekart_user");
+  };
+
+
+  //  LOGIN USER
+
+  const login = async ({ email, password }) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
         }
-    };
+      );
 
-    // register: call your backend /users/register then optionally auto-login
-    const register = async ({ name, email, password }) => {
-        try {
-            const res = await fetch("/users/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, email, password }),
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.message || "Register failed");
-            return { ok: true, message: data.message };
-        } catch (err) {
-            return { ok: false, message: err.message };
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Invalid credentials");
+
+      saveUser(data.user);
+
+      return { ok: true, user: data.user };
+    } catch (err) {
+      return { ok: false, message: err.message };
+    }
+  };
+
+
+  //  REGISTER USER
+
+  const register = async ({ name, email, password }) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/register`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password }),
         }
-    };
+      );
 
-    const logout = () => {
-        clearUser();
-    };
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Registration failed");
 
-    return (
-        <AuthContext.Provider value={{ user, loading, login, register, logout }}>
-            {children}
-        </AuthContext.Provider>
-    );
+      return { ok: true, message: data.message };
+    } catch (err) {
+      return { ok: false, message: err.message };
+    }
+  };
+
+
+  //  LOGOUT USER
+
+  const logout = () => {
+    clearUser();
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        register,
+        logout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }

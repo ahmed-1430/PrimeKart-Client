@@ -108,7 +108,7 @@ const router = useRouter();
                                     router.push("/checkout");
                                 }
                             }}
-                            className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg text-lg font-semibold"
+                            className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg text-lg font-semibold cursor-pointer"
                         >
                             Checkout
                         </button>

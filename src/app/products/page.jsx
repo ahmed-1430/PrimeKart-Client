@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -108,7 +109,7 @@ export default function ProductsPage() {
                 <img
                   src={item.imageUrl}
                   alt={item.title}
-                  className="w-full h-64 object-cover rounded-t-2xl group-hover:scale-110 transition-all duration-500"
+                  className="w-full h-64 object-fit rounded-t-2xl group-hover:scale-110 transition-all duration-500"
                 />
 
                 {/* Priority Badge */}
@@ -143,7 +144,7 @@ export default function ProductsPage() {
                 <button
                   disabled={added}
                   onClick={() => addToCart(item)}
-                  className={`w-full mt-5 py-2 rounded-lg font-medium shadow-md transition 
+                  className={`w-full mt-5 py-2 rounded-lg font-medium shadow-md transition cursor-pointer 
                     ${
                       added
                         ? "bg-gray-400 cursor-not-allowed"
