@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
@@ -13,6 +14,9 @@ export function AuthProvider({ children }) {
     const [token, setToken] = useState(null);
     const [loading, setLoading] = useState(true);
 
+
+    // LOGOUT FUNCTION
+ 
     const logout = () => {
         setUser(null);
         setToken(null);
@@ -20,63 +24,78 @@ export function AuthProvider({ children }) {
         localStorage.removeItem("primekart_token");
     };
 
-    // Load user + token on refresh
+  
+    // SAVE USER + TOKEN
+ 
+    const saveAuth = (userData, jwtToken) => {
+        setUser(userData);
+        setToken(jwtToken);
+        localStorage.setItem("primekart_user", JSON.stringify(userData));
+        localStorage.setItem("primekart_token", jwtToken);
+    };
+
+  
+    // CHECK USER ON REFRESH
     useEffect(() => {
         const storedUser = localStorage.getItem("primekart_user");
         const storedToken = localStorage.getItem("primekart_token");
 
-        if (storedUser && storedToken) {
-            setUser(JSON.parse(storedUser));
-            setToken(storedToken);
-
-            // Validate token by fetching /me
-            axios.get("http://localhost:5000/api/users/me", {
-                headers: { Authorization: `Bearer ${storedToken}` },
-            })
-                .then(res => setUser(res.data.user))
-                .catch(() => logout()); // invalid token → logout
+        if (!storedUser || !storedToken) {
+            setLoading(false);
+            return;
         }
 
-        setLoading(false);
+        setUser(JSON.parse(storedUser));
+        setToken(storedToken);
+
+        // Validate token
+        axios
+            .get("http://localhost:3000/api/users/me", {
+                headers: { Authorization: `Bearer ${storedToken}` },
+            })
+            .then((res) => {
+                setUser(res.data.user); // refresh user data
+            })
+            .catch(() => {
+                logout(); // invalid token
+            })
+            .finally(() => setLoading(false));
     }, []);
-
-    const saveAuth = (user, token) => {
-        setUser(user);
-        setToken(token);
-        localStorage.setItem("primekart_user", JSON.stringify(user));
-        localStorage.setItem("primekart_token", token);
-    };
-
 
 
     // NORMAL LOGIN
     const login = async ({ email, password }) => {
         try {
-            const res = await axios.post("http://localhost:5000/api/users/login", {
-                email,
-                password,
-            });
+            const res = await axios.post(
+                "http://localhost:3000/api/users/login",
+                { email, password }
+            );
 
             saveAuth(res.data.user, res.data.token);
             return { ok: true };
-        } catch (error) {
-            return { ok: false, message: error.response?.data?.message };
+        } catch (err) {
+            return {
+                ok: false,
+                message: err.response?.data?.message || "Login failed",
+            };
         }
     };
 
     // REGISTER
     const registerUser = async ({ name, email, password }) => {
         try {
-            const res = await axios.post("http://localhost:5000/api/users/register", {
-                name,
-                email,
-                password,
-            });
+            const res = await axios.post(
+                "http://localhost:3000/api/users/register",
+                { name, email, password }
+            );
 
             saveAuth(res.data.user, res.data.token);
             return { ok: true };
-        } catch (error) {
-            return { ok: false, message: error.response?.data?.message };
+        } catch (err) {
+            return {
+                ok: false,
+                message: err.response?.data?.message || "Registration failed",
+            };
         }
     };
 
@@ -86,20 +105,28 @@ export function AuthProvider({ children }) {
             const googleRes = await signInWithPopup(auth, googleProvider);
             const profile = googleRes.user;
 
-            // send google user to backend
-            const res = await axios.post("http://localhost:5000/api/users/google", {
-                name: profile.displayName,
-                email: profile.email,
-                avatar: profile.photoURL,
-                googleId: profile.uid,
-            });
+            const res = await axios.post(
+                "http://localhost:3000/api/users/google",
+                {
+                    name: profile.displayName,
+                    email: profile.email,
+                    avatar: profile.photoURL,
+                    googleId: profile.uid,
+                }
+            );
 
             saveAuth(res.data.user, res.data.token);
             return { ok: true };
-        } catch (error) {
-            return { ok: false, message: error.message };
+        } catch (err) {
+            return {
+                ok: false,
+                message: err.response?.data?.message || "Google login failed",
+            };
         }
     };
+
+    
+    // PROVIDER EXPORT
 
     return (
         <AuthContext.Provider
@@ -113,7 +140,7 @@ export function AuthProvider({ children }) {
                 logout,
             }}
         >
-            {children}
+            {!loading && children}
         </AuthContext.Provider>
     );
 }

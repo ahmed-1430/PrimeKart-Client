@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useAuth } from "@/Context/AuthContext";
 
 export default function RegisterPage() {
-    const { registerUser, googleLogin } = useAuth();
+    const { registerUser, loginWithGoogle } = useAuth();
     const router = useRouter();
 
     const [form, setForm] = useState({
@@ -30,8 +30,8 @@ export default function RegisterPage() {
         const result = await registerUser(form);
 
         if (result.ok) {
-            toast.success("Account created successfully 🎉");
-            router.push("/login");
+            toast.success("Account created successfully ");
+            router.push("/");
         } else {
             toast.error(result.message || "Something went wrong");
         }
@@ -42,7 +42,7 @@ export default function RegisterPage() {
     const handleGoogle = async () => {
         setGoogleLoading(true);
 
-        const result = await googleLogin();
+        const result = await loginWithGoogle();
         if (result.ok) {
             toast.success("Logged in with Google 🎉");
             router.push("/");
@@ -54,37 +54,47 @@ export default function RegisterPage() {
     };
 
     return (
-        <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-purple-600 via-purple-800 to-gray-900 px-4 py-10">
+        <main className="min-h-screen flex items-center justify-center px-4 py-10 
+        bg-linear-to-br from-[#1a063a] via-[#3f1e72] to-[#11001d]">
 
-            <div className="w-full max-w-md bg-white/10 backdrop-blur-xl text-white p-10 rounded-2xl shadow-2xl border border-white/10 animate-fadeIn">
+            <div className="w-full max-w-md bg-white/10 backdrop-blur-2xl 
+            text-white p-10 rounded-3xl shadow-2xl border border-white/20 animate-fadeIn">
 
                 {/* Title */}
-                <h1 className="text-4xl font-extrabold text-center mb-3">
+                <h1 className="text-4xl font-extrabold text-center mb-3 tracking-wide">
                     Create Account
                 </h1>
                 <p className="text-center text-gray-300 mb-8">
-                    Join PrimeKart and start your shopping journey!
+                    Join <span className="text-purple-300 font-semibold">PrimeKart</span> today!
                 </p>
 
                 {/* Google Login */}
                 <button
                     onClick={handleGoogle}
-                    className="w-full flex items-center justify-center gap-3 py-3 bg-white text-gray-900 rounded-lg shadow-lg hover:bg-gray-100 transition font-semibold mb-6"
+                    disabled={googleLoading}
+                    className="w-full flex items-center justify-center gap-3 py-3 
+                    bg-white text-gray-900 rounded-lg shadow-lg hover:bg-gray-100 
+                    transition font-semibold mb-6"
                 >
-                    <img src="https://img.icons8.com/?size=100&id=17949&format=png&color=000000" alt="Google" width={22} height={22}
+                    <img
+                        src="https://img.icons8.com/?size=100&id=17949&format=png&color=000000"
+                        alt="Google"
+                        className="w-6"
                     />
                     {googleLoading ? "Please wait..." : "Sign up with Google"}
                 </button>
 
+                {/* Divider */}
                 <div className="flex items-center gap-3 my-6">
-                    <div className="h-px bg-white/20 w-full" />
+                    <div className="h-px bg-white/30 w-full" />
                     <span className="text-white/70">OR</span>
-                    <div className="h-px bg-white/20 w-full" />
+                    <div className="h-px bg-white/30 w-full" />
                 </div>
 
                 {/* Form */}
                 <form onSubmit={handleRegister} className="space-y-6">
 
+                    {/* Full Name */}
                     <div>
                         <label className="text-sm font-semibold">Full Name</label>
                         <input
@@ -94,11 +104,13 @@ export default function RegisterPage() {
                             value={form.name}
                             onChange={onChange}
                             placeholder="Enter your name"
-                            className="w-full mt-2 p-3 rounded-md bg-white/20 border border-white/20 text-white placeholder-gray-300
-                         focus:outline-none focus:ring-2 focus:ring-purple-300 transition"
+                            className="w-full mt-2 p-3 rounded-md bg-white/20 border border-white/30 
+                            text-white placeholder-gray-300 focus:outline-none 
+                            focus:ring-2 focus:ring-purple-400 transition"
                         />
                     </div>
 
+                    {/* Email */}
                     <div>
                         <label className="text-sm font-semibold">Email</label>
                         <input
@@ -108,11 +120,13 @@ export default function RegisterPage() {
                             value={form.email}
                             onChange={onChange}
                             placeholder="Enter your email"
-                            className="w-full mt-2 p-3 rounded-md bg-white/20 border border-white/20 text-white placeholder-gray-300
-                         focus:outline-none focus:ring-2 focus:ring-purple-300 transition"
+                            className="w-full mt-2 p-3 rounded-md bg-white/20 border border-white/30 
+                            text-white placeholder-gray-300 focus:outline-none
+                            focus:ring-2 focus:ring-purple-400 transition"
                         />
                     </div>
 
+                    {/* Password */}
                     <div>
                         <label className="text-sm font-semibold">Password</label>
                         <input
@@ -122,8 +136,9 @@ export default function RegisterPage() {
                             value={form.password}
                             onChange={onChange}
                             placeholder="Create a password"
-                            className="w-full mt-2 p-3 rounded-md bg-white/20 border border-white/20 text-white placeholder-gray-300
-                         focus:outline-none focus:ring-2 focus:ring-purple-300 transition"
+                            className="w-full mt-2 p-3 rounded-md bg-white/20 border border-white/30 
+                            text-white placeholder-gray-300 focus:outline-none
+                            focus:ring-2 focus:ring-purple-400 transition"
                         />
                     </div>
 
@@ -132,9 +147,9 @@ export default function RegisterPage() {
                         type="submit"
                         disabled={loading}
                         className={`w-full py-3 rounded-lg text-lg font-semibold shadow-xl
-                        bg-linear-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800
-                        transition-transform transform hover:-translate-y-1
-                        ${loading && "opacity-60 cursor-not-allowed"}`}
+                        bg-linear-to-r from-purple-500 to-purple-700 hover:from-purple-600 
+                        hover:to-purple-800 transition-transform transform hover:-translate-y-1
+                        ${loading ? "opacity-60 cursor-not-allowed" : ""}`}
                     >
                         {loading ? "Creating account..." : "Sign Up"}
                     </button>
@@ -143,12 +158,15 @@ export default function RegisterPage() {
                 {/* Footer */}
                 <p className="text-center text-gray-200 mt-8">
                     Already have an account?{" "}
-                    <Link href="/login" className="text-purple-300 underline hover:text-purple-100 transition">
+                    <Link
+                        href="/login"
+                        className="text-purple-300 underline hover:text-purple-100 transition"
+                    >
                         Login
                     </Link>
                 </p>
-            </div>
 
+            </div>
         </main>
     );
 }

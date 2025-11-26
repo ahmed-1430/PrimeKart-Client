@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
@@ -19,20 +20,21 @@ export default function CheckoutPage() {
         address: "",
     });
 
-    // PROTECT PAGE
+    // PROTECT CHECKOUT PAGE
     useEffect(() => {
         if (!user) {
             toast.error("Please login to continue");
             router.replace("/login?redirect=/checkout");
-        } else {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setForm({
-                fullName: user.name || "",
-                email: user.email || "",
-                phone: "",
-                address: "",
-            });
+            return;
         }
+
+        // Autofill user data
+        setForm({
+            fullName: user.name || "",
+            email: user.email || "",
+            phone: "",
+            address: "",
+        });
     }, [user, router]);
 
     const handleInput = (e) => {
@@ -43,6 +45,12 @@ export default function CheckoutPage() {
     const placeOrder = async () => {
         if (!form.fullName || !form.phone || !form.address) {
             toast.error("Please fill all required fields");
+            return;
+        }
+
+        if (!user?.token) {
+            toast.error("Authentication failed. Please login again.");
+            router.push("/login");
             return;
         }
 
@@ -67,7 +75,10 @@ export default function CheckoutPage() {
         try {
             const res = await fetch("http://localhost:3000/api/orders", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${user.token}`, 
+                },
                 body: JSON.stringify(orderData),
             });
 
@@ -78,10 +89,10 @@ export default function CheckoutPage() {
             }
 
             toast.success("Order placed successfully!");
-            await clearCart();
+            clearCart();
 
             setTimeout(() => router.push("/ordersuccess"), 700);
-        } catch {
+        } catch (err) {
             toast.error("Something went wrong!");
         }
     };
@@ -94,19 +105,20 @@ export default function CheckoutPage() {
 
             <div className="grid lg:grid-cols-3 gap-10">
 
-                {/* LEFT SIDE FORM */}
+                {/* LEFT: Billing Details */}
                 <section className="lg:col-span-2 p-8 rounded-3xl shadow-xl backdrop-blur-xl bg-white/70 border border-purple-100">
                     <h2 className="text-2xl font-semibold mb-6 text-purple-700">Billing Details</h2>
 
                     <div className="grid sm:grid-cols-2 gap-6">
+
                         <div className="space-y-2">
                             <label className="font-medium text-gray-700">Full Name</label>
                             <input
                                 type="text"
                                 name="fullName"
-                                placeholder="John Doe"
                                 value={form.fullName}
                                 onChange={handleInput}
+                                placeholder="John Doe"
                                 className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-purple-300 outline-none"
                             />
                         </div>
@@ -127,9 +139,9 @@ export default function CheckoutPage() {
                             <input
                                 type="number"
                                 name="phone"
-                                placeholder="01XXXXXXXXX"
                                 value={form.phone}
                                 onChange={handleInput}
+                                placeholder="01XXXXXXXXX"
                                 className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-purple-300 outline-none"
                             />
                         </div>
@@ -138,32 +150,26 @@ export default function CheckoutPage() {
                             <label className="font-medium text-gray-700">Full Address</label>
                             <textarea
                                 name="address"
-                                placeholder="House, Road, Area, City"
                                 value={form.address}
                                 onChange={handleInput}
+                                placeholder="House, Road, Area, City"
                                 className="w-full p-3 border rounded-xl h-32 resize-none focus:ring-2 focus:ring-purple-300 outline-none"
                             ></textarea>
                         </div>
+
                     </div>
                 </section>
 
-                {/* RIGHT SIDE SUMMARY */}
+                {/* RIGHT: Order Summary */}
                 <section className="p-8 rounded-3xl shadow-xl bg-white border border-purple-100">
                     <h2 className="text-2xl font-semibold mb-6 text-purple-700">Order Summary</h2>
 
-                    {/* CART ITEMS */}
-                    <div className="space-y-5 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+                    <div className="space-y-5 max-h-64 overflow-y-auto pr-2">
                         {cart.map(item => (
-                            <div
-                                key={item._id}
-                                className="flex items-center justify-between border-b pb-3"
-                            >
+                            <div key={item._id} className="flex justify-between border-b pb-3">
                                 <div className="flex items-center gap-4">
-                                    <img
-                                        src={item.imageUrl}
-                                        alt={item.title}
-                                        className="w-16 h-16 rounded-xl shadow-md object-cover"
-                                    />
+                                    <img src={item.imageUrl} alt={item.title}
+                                        className="w-16 h-16 rounded-xl object-cover shadow" />
                                     <div>
                                         <h3 className="font-semibold">{item.title}</h3>
                                         <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
@@ -176,7 +182,7 @@ export default function CheckoutPage() {
                         ))}
                     </div>
 
-                    {/* PRICING */}
+                    {/* Prices */}
                     <div className="mt-6 space-y-3 text-gray-700">
                         <div className="flex justify-between">
                             <span className="font-medium">Subtotal</span>
@@ -192,18 +198,17 @@ export default function CheckoutPage() {
 
                         <div className="flex justify-between text-2xl font-extrabold">
                             <span>Total</span>
-                            <span className="text-purple-700">
-                                ${(cartTotal + 5).toFixed(2)}
-                            </span>
+                            <span className="text-purple-700">${(cartTotal + 5).toFixed(2)}</span>
                         </div>
                     </div>
 
                     <button
                         onClick={placeOrder}
                         disabled={cart.length === 0}
-                        className={`w-full mt-8 py-4 rounded-2xl text-lg font-bold shadow-md transition-all ${cart.length === 0
+                        className={`w-full mt-8 py-4 rounded-2xl text-lg font-bold shadow-md transition-all 
+                            ${cart.length === 0
                                 ? "bg-gray-300 cursor-not-allowed"
-                                : "bg-linear-to-r from-purple-600 to-pink-600 text-white hover:shadow-lg hover:scale-[1.02]"
+                                : "bg-linear-to-r from-purple-600 to-pink-600 text-white hover:scale-[1.02]"
                             }`}
                     >
                         {cart.length === 0 ? "Cart is Empty" : "Place Order"}
