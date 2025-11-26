@@ -1,36 +1,38 @@
 "use client";
 
-import Link from "next/link";
 import { useAuth } from "@/Context/AuthContext";
+import Link from "next/link";
 
 export default function AdminLayout({ children }) {
     const { user } = useAuth();
 
-    // Allow only admin
-    if (user?.role !== "admin") {
+    if (!user || user.role !== "admin") {
         return (
-            <div className="h-screen flex items-center justify-center text-red-600 text-xl">
-                 Access Denied — Admin Only
+            <div className="h-[60vh] flex flex-col items-center justify-center">
+                <h2 className="text-xl font-semibold">Access Denied</h2>
+                <p className="mb-4">Only admins can access this area.</p>
+
+                <Link
+                    href="/"
+                    className="px-6 py-2 bg-purple-600 text-white rounded-xl"
+                >
+                    Go Home
+                </Link>
             </div>
         );
     }
 
     return (
-        <div className="flex min-h-screen">
-            {/* Sidebar */}
-            <aside className="w-64 bg-gray-900 text-white p-5 space-y-6">
-                <h2 className="text-2xl font-bold">Admin Panel</h2>
+        <div className="p-6">
+            <div className="flex gap-6 mb-10 border-b pb-4">
+                <Link href="/admin" className="text-purple-600 font-semibold">
+                    Dashboard
+                </Link>
+                <Link href="/admin/products/create">Create Product</Link>
+                <Link href="/admin/users">Users</Link>
+            </div>
 
-                <nav className="flex flex-col space-y-3">
-                    <Link href="/admin">Dashboard</Link>
-                    <Link href="/admin/products">Products</Link>
-                    <Link href="/admin/orders">Orders</Link>
-                    <Link href="/admin/users">Users</Link>
-                </nav>
-            </aside>
-
-            {/* Main Dashboard Content */}
-            <main className="flex-1 p-10 bg-gray-100">{children}</main>
+            {children}
         </div>
     );
 }
