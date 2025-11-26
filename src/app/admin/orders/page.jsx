@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "@/Context/AuthContext";
+import UpdateOrderModal from "./UpdateOrderModal";
 
 export default function OrdersPage() {
   const { user } = useAuth();
@@ -10,6 +11,7 @@ export default function OrdersPage() {
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     if (!user || user.role !== "admin") return;
@@ -56,7 +58,7 @@ export default function OrdersPage() {
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+      <h1 className="text-3xl font-extrabold bg-linear-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
         Orders Management
       </h1>
       <p className="text-gray-500 mt-1">Review and update customer orders.</p>
@@ -98,13 +100,15 @@ export default function OrdersPage() {
                 <td className="p-3 font-medium text-gray-700">
                   #{order._id.slice(-6)}
                 </td>
+
                 <td className="p-3">{order.customer?.name}</td>
+
                 <td className="p-3 text-purple-600 font-semibold">
                   ${order.total}
                 </td>
+
                 <td className="p-3">{order.items?.length} items</td>
 
-                {/* STATUS BADGE */}
                 <td className="p-3">
                   <StatusBadge status={order.status} />
                 </td>
@@ -113,11 +117,9 @@ export default function OrdersPage() {
                   {new Date(order.createdAt).toLocaleDateString()}
                 </td>
 
-                {/* ACTION BUTTONS */}
+                {/* ACTION BUTTON */}
                 <td className="p-3 text-center">
-                  <button className="px-4 py-1 text-sm rounded-lg bg-purple-600 text-white hover:bg-purple-700">
-                    Update
-                  </button>
+                  <button onClick={() => setSelectedOrder(order)} className="px-4 py-1 text-sm rounded-lg bg-purple-600 text-white hover:bg-purple-700 cursor-pointer"> Update</button>
                 </td>
               </tr>
             ))}
@@ -128,6 +130,25 @@ export default function OrdersPage() {
           <div className="py-10 text-center text-gray-500">No orders found</div>
         )}
       </div>
+
+      {/* UPDATE ORDER MODAL */}
+      {selectedOrder && (
+        <UpdateOrderModal
+          order={selectedOrder}
+          onClose={() => setSelectedOrder(null)}
+          onUpdated={(updated) => {
+            // update UI instantly
+            setOrders((prev) =>
+              prev.map((o) => (o._id === updated._id ? updated : o))
+            );
+            setFiltered((prev) =>
+              prev.map((o) => (o._id === updated._id ? updated : o))
+            );
+
+            setSelectedOrder(null);
+          }}
+        />
+      )}
     </div>
   );
 }

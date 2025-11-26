@@ -46,7 +46,7 @@ export default function AdminDashboard() {
     return (
         <div className="p-6">
             {/* DASHBOARD HEADER */}
-            <h1 className="text-3xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-extrabold bg-linear-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
                 Admin Dashboard
             </h1>
             <p className="text-gray-500 mt-1">Overview of your store performance</p>

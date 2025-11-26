@@ -14,7 +14,7 @@ export default function AdminLayout({ children }) {
         if (!loading && (!user || user.role !== "admin")) {
             router.push("/"); 
         }
-    }, [user, loading]);
+    }, [user,router, loading]);
 
     if (loading || !user) {
         return (
