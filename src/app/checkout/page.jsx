@@ -13,6 +13,8 @@ export default function CheckoutPage() {
     const { user } = useAuth();
     const { cart, cartTotal, clearCart } = useCart();
 
+    const [isReady, setIsReady] = useState(false);
+
     const [form, setForm] = useState({
         fullName: "",
         email: "",
@@ -20,7 +22,7 @@ export default function CheckoutPage() {
         address: "",
     });
 
-    // PROTECT CHECKOUT PAGE
+    // PROTECT PAGE + AUTO FILL
     useEffect(() => {
         if (!user) {
             toast.error("Please login to continue");
@@ -28,28 +30,33 @@ export default function CheckoutPage() {
             return;
         }
 
-        // Autofill user data
-        setForm({
-            fullName: user.name || "",
-            email: user.email || "",
-            phone: "",
-            address: "",
-        });
+        // Autofill user data safely
+        setForm((prev) => ({
+            ...prev,
+            fullName: user?.name || "",
+            email: user?.email || "",
+        }));
+
+        setIsReady(true);
     }, [user, router]);
 
     const handleInput = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    // PLACE ORDER
+    const validate = () => {
+        if (form.fullName.length < 3) return "Enter a valid full name";
+        if (!form.phone || form.phone.length < 11) return "Enter a valid phone number";
+        if (!form.address || form.address.length < 10) return "Enter a full delivery address";
+        return null;
+    };
+
     const placeOrder = async () => {
-        if (!form.fullName || !form.phone || !form.address) {
-            toast.error("Please fill all required fields");
-            return;
-        }
+        const error = validate();
+        if (error) return toast.error(error);
 
         if (!user?.token) {
-            toast.error("Authentication failed. Please login again.");
+            toast.error("Session expired. Please login again.");
             router.push("/login");
             return;
         }
@@ -61,6 +68,7 @@ export default function CheckoutPage() {
                 email: form.email,
                 phone: form.phone,
             },
+            address: form.address,
             items: cart.map(item => ({
                 id: item._id,
                 title: item.title,
@@ -68,8 +76,8 @@ export default function CheckoutPage() {
                 quantity: item.quantity,
                 image: item.imageUrl,
             })),
+            shipping: 5,
             total: cartTotal + 5,
-            address: form.address,
         };
 
         try {
@@ -77,25 +85,29 @@ export default function CheckoutPage() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${user.token}`, 
+                    Authorization: `Bearer ${user.token}`,
                 },
                 body: JSON.stringify(orderData),
             });
 
             const data = await res.json();
+
             if (!res.ok) {
                 toast.error(data.message || "Order failed");
                 return;
             }
 
-            toast.success("Order placed successfully!");
+            toast.success("Order placed successfully 🎉");
             clearCart();
+            router.push("/ordersuccess");
 
-            setTimeout(() => router.push("/ordersuccess"), 700);
         } catch (err) {
             toast.error("Something went wrong!");
+            console.log(err);
         }
     };
+
+    if (!isReady) return null;
 
     return (
         <main className="w-11/12 mx-auto py-12">
@@ -105,56 +117,77 @@ export default function CheckoutPage() {
 
             <div className="grid lg:grid-cols-3 gap-10">
 
-                {/* LEFT: Billing Details */}
+                {/* LEFT: Billing Form */}
                 <section className="lg:col-span-2 p-8 rounded-3xl shadow-xl backdrop-blur-xl bg-white/70 border border-purple-100">
                     <h2 className="text-2xl font-semibold mb-6 text-purple-700">Billing Details</h2>
 
                     <div className="grid sm:grid-cols-2 gap-6">
 
-                        <div className="space-y-2">
-                            <label className="font-medium text-gray-700">Full Name</label>
+                        {/* FULL NAME */}
+                        <div className="relative">
                             <input
                                 type="text"
                                 name="fullName"
                                 value={form.fullName}
                                 onChange={handleInput}
-                                placeholder="John Doe"
-                                className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-purple-300 outline-none"
+                                placeholder=" "
+                                className="w-full p-3 bg-white/30 border border-purple-200 rounded-xl text-gray-800
+                                        peer focus:ring-2 focus:ring-purple-400 outline-none"
                             />
+                            <label className="absolute left-3 top-3 text-gray-600 text-sm pointer-events-none
+                                transition-all peer-focus:top-1 peer-focus:text-xs peer-focus:text-purple-700
+                                peer-not-placeholder-shown:top-1 peer-not-placeholder-shown:text-xs">
+                                Full Name
+                            </label>
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="font-medium text-gray-700">Email</label>
+                        {/* EMAIL */}
+                        <div className="relative">
                             <input
                                 type="email"
                                 name="email"
                                 value={form.email}
                                 disabled
-                                className="w-full p-3 border rounded-xl bg-gray-100 text-gray-500"
+                                className="w-full p-3 bg-gray-200 border border-gray-300 rounded-xl text-gray-600 cursor-not-allowed"
                             />
+                            <label className="absolute left-3 top-3 text-gray-500 text-xs">
+                                Email (Auto-filled)
+                            </label>
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="font-medium text-gray-700">Phone</label>
+                        {/* PHONE */}
+                        <div className="relative">
                             <input
                                 type="number"
                                 name="phone"
                                 value={form.phone}
                                 onChange={handleInput}
-                                placeholder="01XXXXXXXXX"
-                                className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-purple-300 outline-none"
+                                placeholder=" "
+                                className="w-full p-3 bg-white/30 border border-purple-200 rounded-xl text-gray-800
+                                            peer focus:ring-2 focus:ring-purple-400 outline-none"
                             />
+                            <label className="absolute left-3 top-3 text-gray-600 text-sm pointer-events-none
+                                transition-all peer-focus:top-1 peer-focus:text-xs peer-focus:text-purple-700
+                                peer-not-placeholder-shown:top-1 peer-not-placeholder-shown:text-xs">
+                                Phone Number
+                            </label>
                         </div>
 
-                        <div className="space-y-2 sm:col-span-2">
-                            <label className="font-medium text-gray-700">Full Address</label>
+                        {/* ADDRESS */}
+                        <div className="relative sm:col-span-2">
                             <textarea
                                 name="address"
                                 value={form.address}
                                 onChange={handleInput}
-                                placeholder="House, Road, Area, City"
-                                className="w-full p-3 border rounded-xl h-32 resize-none focus:ring-2 focus:ring-purple-300 outline-none"
+                                placeholder=" "
+                                className="w-full p-3 bg-white/30 border border-purple-200 rounded-xl text-gray-800
+                                            h-32 resize-none peer focus:ring-2 focus:ring-purple-400 outline-none"
                             ></textarea>
+                            <label className="absolute left-3 top-3 text-gray-600 text-sm pointer-events-none
+                                transition-all peer-focus:top-1 peer-focus:text-xs peer-focus:text-purple-700
+                                peer-not-placeholder-shown:top-1 peer-not-placeholder-shown:text-xs">
+                                Full Address
+                            </label>
                         </div>
 
                     </div>
@@ -168,8 +201,11 @@ export default function CheckoutPage() {
                         {cart.map(item => (
                             <div key={item._id} className="flex justify-between border-b pb-3">
                                 <div className="flex items-center gap-4">
-                                    <img src={item.imageUrl} alt={item.title}
-                                        className="w-16 h-16 rounded-xl object-cover shadow" />
+                                    <img
+                                        src={item.imageUrl}
+                                        alt={item.title}
+                                        className="w-16 h-16 rounded-xl object-cover shadow"
+                                    />
                                     <div>
                                         <h3 className="font-semibold">{item.title}</h3>
                                         <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
@@ -182,7 +218,7 @@ export default function CheckoutPage() {
                         ))}
                     </div>
 
-                    {/* Prices */}
+                    {/* Price Summary */}
                     <div className="mt-6 space-y-3 text-gray-700">
                         <div className="flex justify-between">
                             <span className="font-medium">Subtotal</span>
@@ -198,7 +234,9 @@ export default function CheckoutPage() {
 
                         <div className="flex justify-between text-2xl font-extrabold">
                             <span>Total</span>
-                            <span className="text-purple-700">${(cartTotal + 5).toFixed(2)}</span>
+                            <span className="text-purple-700">
+                                ${(cartTotal + 5).toFixed(2)}
+                            </span>
                         </div>
                     </div>
 
