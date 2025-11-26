@@ -1,5 +1,5 @@
-import Navbar from "@/Component/Navbar";
 import "./globals.css";
+import Navbar from "@/Component/Navbar";
 import Footer from "@/Component/Footer";
 import { CartProvider } from "@/Context/CartContext";
 import { AuthProvider } from "@/Context/AuthContext";
@@ -15,15 +15,13 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <AuthProvider>
-          <ToastContainer/>
+          <ToastContainer />
           <CartProvider>
             <Navbar />
             {children}
             <Footer />
           </CartProvider>
         </AuthProvider>
-
-
       </body>
     </html>
   );

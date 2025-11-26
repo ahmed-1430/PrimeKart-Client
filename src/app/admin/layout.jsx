@@ -2,15 +2,33 @@
 
 import { useAuth } from "@/Context/AuthContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function AdminLayout({ children }) {
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
+    const router = useRouter();
 
-    if (!user || user.role !== "admin") {
+    // Handle loading state
+    useEffect(() => {
+        if (!loading && (!user || user.role !== "admin")) {
+            router.push("/"); 
+        }
+    }, [user, loading]);
+
+    if (loading || !user) {
+        return (
+            <div className="h-[60vh] flex items-center justify-center text-xl">
+                Checking admin access...
+            </div>
+        );
+    }
+
+    if (user.role !== "admin") {
         return (
             <div className="h-[60vh] flex flex-col items-center justify-center">
                 <h2 className="text-xl font-semibold">Access Denied</h2>
-                <p className="mb-4">Only admins can access this area.</p>
+                <p className="mb-4">Only administrators can access this area.</p>
 
                 <Link
                     href="/"
@@ -22,16 +40,33 @@ export default function AdminLayout({ children }) {
         );
     }
 
+    // Admin layout UI
     return (
-        <div className="p-6">
-            <div className="flex gap-6 mb-10 border-b pb-4">
-                <Link href="/admin" className="text-purple-600 font-semibold">
+        <div className="min-h-screen p-6 bg-gray-50">
+            {/* NAVBAR */}
+            <div className="flex gap-6 mb-10 pb-4 border-b text-lg font-medium">
+                <Link href="/admin" className="text-purple-600">
                     Dashboard
                 </Link>
-                <Link href="/admin/products/create">Create Product</Link>
-                <Link href="/admin/users">Users</Link>
+
+                <Link href="/admin/products" className="hover:text-purple-600">
+                    Products
+                </Link>
+
+                <Link href="/admin/products/create" className="hover:text-purple-600">
+                    Add Product
+                </Link>
+
+                <Link href="/admin/orders" className="hover:text-purple-600">
+                    Orders
+                </Link>
+
+                <Link href="/admin/users" className="hover:text-purple-600">
+                    Users
+                </Link>
             </div>
 
+            {/* PAGE CONTENT */}
             {children}
         </div>
     );

@@ -9,47 +9,37 @@ import { auth, googleProvider } from "@/lib/FireBase.init";
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
-// BACKEND BASE URL
 const API = "http://localhost:3000";
-
-
-// GLOBAL TOKEN INTERCEPTOR
-
-axios.interceptors.request.use((config) => {
-    const token = localStorage.getItem("primekart_token");
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
     const [loading, setLoading] = useState(true);
 
-
-    // SAVE AUTH DATA
+    // ---- Save Auth ----
     const saveAuth = (userData, jwtToken) => {
         setUser(userData);
         setToken(jwtToken);
 
         localStorage.setItem("primekart_user", JSON.stringify(userData));
         localStorage.setItem("primekart_token", jwtToken);
+
+        // Attach Token to axios
+        axios.defaults.headers.common["Authorization"] = `Bearer ${jwtToken}`;
     };
 
-
-    // LOGOUT
-
+    // ---- Logout ----
     const logout = () => {
         setUser(null);
         setToken(null);
+
         localStorage.removeItem("primekart_user");
         localStorage.removeItem("primekart_token");
+
         delete axios.defaults.headers.common["Authorization"];
     };
 
-    // RESTORE SESSION ON REFRESH
+    // ---- Restore Session on Page Refresh ----
     useEffect(() => {
         const storedUser = localStorage.getItem("primekart_user");
         const storedToken = localStorage.getItem("primekart_token");
@@ -62,41 +52,43 @@ export function AuthProvider({ children }) {
         setUser(JSON.parse(storedUser));
         setToken(storedToken);
 
-        // Verify token with backend
+        axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
+
+        // Verify Token
         axios
             .get(`${API}/api/users/me`)
             .then((res) => {
-                setUser(res.data); // backend returns direct user
+                setUser(res.data); // backend returns user info directly
             })
             .catch(() => {
-                console.log("Invalid or expired token — clearing session.");
+                console.log("Invalid or expired token — logging out.");
                 logout();
             })
             .finally(() => setLoading(false));
     }, []);
 
+    // ---- Login ----
+    const login = async ({ email, password }) => {
+        try {
+            const res = await axios.post(`${API}/api/users/login`, {
+                email,
+                password,
+            });
 
-    // LOGIN
-  const login = async ({ email, password }) => {
-    try {
-        const res = await axios.post(`${API}/api/users/login`, {
-            email,
-            password,
-        });
+            // backend returns:
+            // { user: { ... }, token: "JWT" }
+            saveAuth(res.data.user, res.data.token);
 
-        saveAuth(res.data.user, res.data.token);
+            return { ok: true };
+        } catch (err) {
+            return {
+                ok: false,
+                message: err.response?.data?.message || "Login failed",
+            };
+        }
+    };
 
-        return { ok: true };
-    } catch (err) {
-        return {
-            ok: false,
-            message: err.response?.data?.message || "Login failed",
-        };
-    }
-};
-
-
-    // REGISTER
+    // ---- Register ----
     const registerUser = async ({ name, email, password }) => {
         try {
             const res = await axios.post(`${API}/api/users/register`, {
@@ -105,7 +97,7 @@ export function AuthProvider({ children }) {
                 password,
             });
 
-            saveAuth(res.data.user, res.data.user.token);
+            saveAuth(res.data.user, res.data.token);
 
             return { ok: true };
         } catch (err) {
@@ -116,7 +108,7 @@ export function AuthProvider({ children }) {
         }
     };
 
-    // GOOGLE LOGIN
+    // ---- Google Login ----
     const loginWithGoogle = async () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
@@ -129,7 +121,7 @@ export function AuthProvider({ children }) {
                 googleId: profile.uid,
             });
 
-            saveAuth(res.data.user, res.data.user.token);
+            saveAuth(res.data.user, res.data.token);
 
             return { ok: true };
         } catch (err) {
