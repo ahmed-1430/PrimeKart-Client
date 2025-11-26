@@ -30,7 +30,7 @@ export default function RegisterPage() {
         const result = await registerUser(form);
 
         if (result.ok) {
-            toast.success("Account created successfully ");
+            toast.success("Account created successfully");
             router.push("/");
         } else {
             toast.error(result.message || "Something went wrong");
@@ -44,7 +44,7 @@ export default function RegisterPage() {
 
         const result = await loginWithGoogle();
         if (result.ok) {
-            toast.success("Logged in with Google 🎉");
+            toast.success("Logged in with Google ");
             router.push("/");
         } else {
             toast.error(result.message || "Google login failed");
@@ -74,7 +74,7 @@ export default function RegisterPage() {
                     disabled={googleLoading}
                     className="w-full flex items-center justify-center gap-3 py-3 
                     bg-white text-gray-900 rounded-lg shadow-lg hover:bg-gray-100 
-                    transition font-semibold mb-6"
+                    transition font-semibold mb-6 cursor-pointer"
                 >
                     <img
                         src="https://img.icons8.com/?size=100&id=17949&format=png&color=000000"
@@ -94,59 +94,29 @@ export default function RegisterPage() {
                 {/* Form */}
                 <form onSubmit={handleRegister} className="space-y-6">
 
-                    {/* Full Name */}
-                    <div>
-                        <label className="text-sm font-semibold">Full Name</label>
-                        <input
-                            name="name"
-                            type="text"
-                            required
-                            value={form.name}
-                            onChange={onChange}
-                            placeholder="Enter your name"
-                            className="w-full mt-2 p-3 rounded-md bg-white/20 border border-white/30 
-                            text-white placeholder-gray-300 focus:outline-none 
-                            focus:ring-2 focus:ring-purple-400 transition"
-                        />
+                    {/* Full Name — Floating Label */}
+                    <div className="relative">
+                        <input name="name" type="text" required value={form.name} onChange={onChange} placeholder=" " className="w-full p-3 rounded-lg bg-white/10 border border-white/30 text-white peer focus:outline-none focus:ring-2 focus:ring-purple-400 transition" />
+                        <label className="absolute left-3 top-3 text-gray-300 text-sm pointer-events-none transition-all peer-focus:top-1 peer-focus:text-xs peer-focus:text-purple-300 peer-not-placeholder-shown:top-1 peer-not-placeholder-shown:text-xs  peer-not-placeholder-shown:text-purple-200">Full Name</label>
                     </div>
 
-                    {/* Email */}
-                    <div>
-                        <label className="text-sm font-semibold">Email</label>
-                        <input
-                            name="email"
-                            type="email"
-                            required
-                            value={form.email}
-                            onChange={onChange}
-                            placeholder="Enter your email"
-                            className="w-full mt-2 p-3 rounded-md bg-white/20 border border-white/30 
-                            text-white placeholder-gray-300 focus:outline-none
-                            focus:ring-2 focus:ring-purple-400 transition"
-                        />
+                    {/* Email — Floating Label */}
+                    <div className="relative">
+                        <input name="email" type="email" required value={form.email} onChange={onChange} placeholder=" " className="w-full p-3 rounded-lg bg-white/10 border border-white/30 text-white peer focus:outline-none focus:ring-2 focus:ring-purple-400 transition" />
+                        <label className="absolute left-3 top-3 text-gray-300 text-sm pointer-events-none transition-all peer-focus:top-1 peer-focus:text-xs peer-focus:text-purple-300 peer-not-placeholder-shown:top-1 peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-purple-200">Email Address</label>
                     </div>
 
-                    {/* Password */}
-                    <div>
-                        <label className="text-sm font-semibold">Password</label>
-                        <input
-                            name="password"
-                            type="password"
-                            required
-                            value={form.password}
-                            onChange={onChange}
-                            placeholder="Create a password"
-                            className="w-full mt-2 p-3 rounded-md bg-white/20 border border-white/30 
-                            text-white placeholder-gray-300 focus:outline-none
-                            focus:ring-2 focus:ring-purple-400 transition"
-                        />
+                    {/* Password — Floating Label */}
+                    <div className="relative">
+                        <input name="password" type="password" required value={form.password} onChange={onChange} placeholder=" " className="w-full p-3 rounded-lg bg-white/10 border border-white/30 text-white peer focus:outline-none focus:ring-2 focus:ring-purple-400 transition" />
+                        <label className="absolute left-3 top-3 text-gray-300 text-sm pointer-events-none transition-all peer-focus:top-1 peer-focus:text-xs peer-focus:text-purple-300 peer-not-placeholder-shown:top-1 peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-purple-200">Password</label>
                     </div>
 
                     {/* Button */}
                     <button
                         type="submit"
                         disabled={loading}
-                        className={`w-full py-3 rounded-lg text-lg font-semibold shadow-xl
+                        className={`w-full py-3 rounded-lg text-lg font-semibold shadow-xl cursor-pointer
                         bg-linear-to-r from-purple-500 to-purple-700 hover:from-purple-600 
                         hover:to-purple-800 transition-transform transform hover:-translate-y-1
                         ${loading ? "opacity-60 cursor-not-allowed" : ""}`}

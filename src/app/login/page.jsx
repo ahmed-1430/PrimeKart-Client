@@ -56,11 +56,8 @@ export default function LoginPage() {
             <div className="w-full max-w-lg bg-white/10 backdrop-blur-2xl text-white p-10 rounded-3xl shadow-[0_0_50px_rgba(175,0,255,0.2)] border border-white/20 animate-fadeIn">
 
                 {/* Title */}
-                <h1 className="text-4xl font-extrabold text-center mb-3 tracking-wide">
-                    Welcome Back
-                </h1>
-                <p className="text-center text-gray-300 mb-8">
-                    Log in to continue shopping at{" "}
+                <h1 className="text-4xl font-extrabold text-center mb-3 tracking-wide">Welcome Back</h1>
+                <p className="text-center text-gray-300 mb-8"> Log in to continue shopping at{" "}
                     <span className="text-purple-300 font-semibold">PrimeKart</span>
                 </p>
 
@@ -69,7 +66,7 @@ export default function LoginPage() {
                     onClick={handleGoogleLogin}
                     disabled={googleLoading}
                     className="w-full bg-white text-gray-900 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl 
-                    hover:bg-gray-100 transition-all flex items-center justify-center gap-3 mb-6"
+                    hover:bg-gray-100 transition-all flex items-center justify-center gap-3 mb-6 cursor-pointer"
                 >
                     <img
                         src="https://img.icons8.com/?size=100&id=17949&format=png&color=000000"
@@ -105,7 +102,7 @@ export default function LoginPage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className={`w-full py-3 rounded-lg text-lg font-bold shadow-xl bg-linear-to-r 
+                        className={`w-full py-3 rounded-lg text-lg font-bold shadow-xl bg-linear-to-r cursor-pointer
                         from-purple-600 to-pink-600 hover:shadow-purple-500/40 hover:scale-[1.03] 
                         transition-transform ${loading ? "opacity-60 cursor-not-allowed" : ""}`}
                     >
