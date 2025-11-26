@@ -97,7 +97,7 @@ export default function CheckoutPage() {
                 return;
             }
 
-            toast.success("Order placed successfully 🎉");
+            toast.success("Order placed successfully");
             clearCart();
             router.push("/ordersuccess");
 
@@ -134,11 +134,7 @@ export default function CheckoutPage() {
                                 className="w-full p-3 bg-white/30 border border-purple-200 rounded-xl text-gray-800
                                         peer focus:ring-2 focus:ring-purple-400 outline-none"
                             />
-                            <label className="absolute left-3 top-3 text-gray-600 text-sm pointer-events-none
-                                transition-all peer-focus:top-1 peer-focus:text-xs peer-focus:text-purple-700
-                                peer-not-placeholder-shown:top-1 peer-not-placeholder-shown:text-xs">
-                                Full Name
-                            </label>
+                            <label className="absolute left-3 top-3 text-gray-600 text-sm pointer-events-none transition-all peer-focus:top-[-18] peer-focus:text-xs peer-focus:text-purple-700 peer-not-placeholder-shown:top-[-15] peer-not-placeholder-shown:text-xs"> Full Name</label>
                         </div>
 
                         {/* EMAIL */}
@@ -149,10 +145,7 @@ export default function CheckoutPage() {
                                 value={form.email}
                                 disabled
                                 className="w-full p-3 bg-gray-200 border border-gray-300 rounded-xl text-gray-600 cursor-not-allowed"
-                            />
-                            <label className="absolute left-3 top-3 text-gray-500 text-xs">
-                                Email (Auto-filled)
-                            </label>
+                            />                            
                         </div>
 
                         {/* PHONE */}
@@ -166,11 +159,7 @@ export default function CheckoutPage() {
                                 className="w-full p-3 bg-white/30 border border-purple-200 rounded-xl text-gray-800
                                             peer focus:ring-2 focus:ring-purple-400 outline-none"
                             />
-                            <label className="absolute left-3 top-3 text-gray-600 text-sm pointer-events-none
-                                transition-all peer-focus:top-1 peer-focus:text-xs peer-focus:text-purple-700
-                                peer-not-placeholder-shown:top-1 peer-not-placeholder-shown:text-xs">
-                                Phone Number
-                            </label>
+                            <label className="absolute left-3 top-3 text-gray-600 text-sm pointer-events-none transition-all peer-focus:top-[-18] peer-focus:text-xs peer-focus:text-purple-700 peer-not-placeholder-shown:top-[-15] peer-not-placeholder-shown:text-xs">Phone Number</label>
                         </div>
 
                         {/* ADDRESS */}
@@ -183,11 +172,7 @@ export default function CheckoutPage() {
                                 className="w-full p-3 bg-white/30 border border-purple-200 rounded-xl text-gray-800
                                             h-32 resize-none peer focus:ring-2 focus:ring-purple-400 outline-none"
                             ></textarea>
-                            <label className="absolute left-3 top-3 text-gray-600 text-sm pointer-events-none
-                                transition-all peer-focus:top-1 peer-focus:text-xs peer-focus:text-purple-700
-                                peer-not-placeholder-shown:top-1 peer-not-placeholder-shown:text-xs">
-                                Full Address
-                            </label>
+                            <label className="absolute left-3 top-3 text-gray-600 text-sm pointer-events-none transition-all peer-focus:top-[-18] peer-focus:text-xs peer-focus:text-purple-700 peer-not-placeholder-shown:top-[-15] peer-not-placeholder-shown:text-xs">Full Address</label>
                         </div>
 
                     </div>
@@ -243,7 +228,7 @@ export default function CheckoutPage() {
                     <button
                         onClick={placeOrder}
                         disabled={cart.length === 0}
-                        className={`w-full mt-8 py-4 rounded-2xl text-lg font-bold shadow-md transition-all 
+                        className={`w-full mt-8 py-4 rounded-2xl text-lg font-bold shadow-md transition-all cursor-pointer 
                             ${cart.length === 0
                                 ? "bg-gray-300 cursor-not-allowed"
                                 : "bg-linear-to-r from-purple-600 to-pink-600 text-white hover:scale-[1.02]"

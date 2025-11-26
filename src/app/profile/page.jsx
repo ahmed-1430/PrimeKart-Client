@@ -127,7 +127,7 @@ export default function ProfilePage() {
                         <p className="text-gray-700 text-lg mt-2">{user.email}</p>
 
                         <p className="text-gray-600 mt-1 text-sm">
-                            Member since{" "}
+                            Member since:{" "}
                             <span className="font-medium">
                                 {user.createdAt
                                     ? new Date(user.createdAt).toLocaleDateString()
@@ -144,15 +144,10 @@ export default function ProfilePage() {
                     { label: "Total Orders", value: stats.totalOrders, color: "purple" },
                     { label: "Pending", value: stats.pending, color: "yellow" },
                     {
-                        label: "Total Spent",
-                        value: `$${stats.spent.toFixed(2)}`,
-                        color: "green",
+                        label: "Total Spent", value: `$${stats.spent.toFixed(2)}`, color: "green",
                     },
                 ].map((box, idx) => (
-                    <div
-                        key={idx}
-                        className="p-6 rounded-2xl bg-white shadow-lg border border-zinc-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-                    >
+                    <div key={idx} className="p-6 rounded-2xl bg-white shadow-lg border border-zinc-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                         <h3 className="text-gray-500">{box.label}</h3>
                         <p className={`text-4xl font-bold mt-3 text-${box.color}-600`}>
                             {box.value}
@@ -169,32 +164,18 @@ export default function ProfilePage() {
                     {/* Full Name */}
                     <div>
                         <label className="font-medium text-gray-700">Full Name</label>
-                        <input
-                            value={profile.name}
-                            onChange={(e) =>
-                                setProfile({ ...profile, name: e.target.value })
-                            }
-                            className="mt-2 w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-600 transition"
-                        />
+                        <input value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} className="mt-2 w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-600 transition" />
                     </div>
 
                     {/* Phone */}
                     <div>
                         <label className="font-medium text-gray-700">Phone Number</label>
-                        <input
-                            value={profile.phone}
-                            onChange={(e) =>
-                                setProfile({ ...profile, phone: e.target.value })
-                            }
-                            className="mt-2 w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-600 transition"
-                        />
+                        <input value={profile.phone} onChange={(e) => setProfile({ ...profile, phone: e.target.value })} className="mt-2 w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-600 transition" />
                     </div>
 
                     {/* Address */}
                     <div className="md:col-span-2">
-                        <label className="font-medium text-gray-700">
-                            Shipping Address
-                        </label>
+                        <label className="font-medium text-gray-700">Shipping Address</label>
                         <textarea
                             value={profile.address}
                             onChange={(e) =>
@@ -204,27 +185,14 @@ export default function ProfilePage() {
                         ></textarea>
                     </div>
                 </div>
-
-                <button
-                    onClick={handleSave}
-                    className="mt-6 px-8 py-3 bg-linear-to-r from-purple-600 to-blue-600 text-white rounded-xl text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200"
-                >
-                    Save Changes
-                </button>
+                <button onClick={handleSave} className="mt-6 px-8 py-3 bg-linear-to-r from-purple-600 to-blue-600 text-white rounded-xl text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200 cursor-pointer">Save Changes</button>
             </div>
 
             {/* RECENT ORDERS */}
             <div className="p-10 bg-white rounded-3xl shadow-2xl border border-zinc-200">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-3xl font-semibold text-gray-800">
-                        Recent Orders
-                    </h2>
-                    <Link
-                        href="/orders"
-                        className="text-purple-600 font-medium hover:underline"
-                    >
-                        View All
-                    </Link>
+                    <h2 className="text-3xl font-semibold text-gray-800">Recent Orders</h2>
+                    <Link href="/orders" className="text-purple-600 font-medium hover:underline">View All</Link>
                 </div>
 
                 {recentOrders.length === 0 ? (
@@ -236,9 +204,7 @@ export default function ProfilePage() {
                                 key={o._id}
                                 className="p-4 border rounded-xl bg-gray-50 hover:bg-gray-100 transition-all duration-200 shadow-sm"
                             >
-                                <p className="font-semibold">
-                                    Order #{o._id.slice(0, 10)}
-                                </p>
+                                <p className="font-semibold">Order #{o._id.slice(0, 10)}</p>
                                 <p className="text-gray-600 text-sm">
                                     {new Date(o.createdAt).toLocaleDateString()}
                                 </p>
