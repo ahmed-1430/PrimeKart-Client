@@ -18,7 +18,7 @@ export default function OrdersPage() {
 
     async function loadOrders() {
       try {
-        const res = await axios.get("http://localhost:3000/api/admin/orders");
+        const res = await axios.get("https://prime-kart-server.vercel.app/api/admin/orders");
         setOrders(res.data);
         setFiltered(res.data);
       } catch (err) {
@@ -57,7 +57,7 @@ export default function OrdersPage() {
     );
 
   return (
-    <div className="p-6">
+    <div className="py-6 w-11/12 mx-auto">
       <h1 className="text-3xl font-extrabold bg-linear-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
         Orders Management
       </h1>

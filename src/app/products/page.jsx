@@ -16,7 +16,7 @@ export default function ProductsPage() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/products/")
+      .get("https://prime-kart-server.vercel.app/api/products/")
       .then((res) => setProducts(res.data))
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));

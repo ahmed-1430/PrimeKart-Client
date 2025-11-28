@@ -86,4 +86,7 @@ body {
   animation: slideIn 0.25s ease-out;
 }
 
+.input {
+    @apply border p-3 rounded-lg focus:ring-2 focus:ring-primary outline-none;
+}
 

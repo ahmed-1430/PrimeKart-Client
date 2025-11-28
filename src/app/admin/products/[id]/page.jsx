@@ -11,7 +11,7 @@ export default function EditProductPage() {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:3000/api/products/${id}`)
+            .get(`https://prime-kart-server.vercel.app/api/products/${id}`)
             .then((res) => setForm(res.data))
             .catch(() => toast.error("Failed to load product"));
     }, [id]);
@@ -20,7 +20,7 @@ export default function EditProductPage() {
 
     const handleUpdate = async () => {
         try {
-            await axios.put(`http://localhost:3000/api/products/${id}`, form);
+            await axios.put(`https://prime-kart-server.vercel.app/api/products/${id}`, form);
             toast.success("Product updated!");
         } catch {
             toast.error("Update failed");

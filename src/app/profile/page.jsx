@@ -38,7 +38,7 @@ export default function ProfilePage() {
                 });
 
                 const res = await axios.get(
-                    `http://localhost:3000/api/orders/${user.email}`
+                    `https://prime-kart-server.vercel.app/api/orders/${user.email}`
                 );
                 const orders = res.data;
 
@@ -77,7 +77,7 @@ export default function ProfilePage() {
     const handleSave = async () => {
         try {
             await axios.put(
-                `http://localhost:3000/api/users/${user.id}`,
+                `https://prime-kart-server.vercel.app/api/users/${user.id}`,
                 profile
             );
             toast.success("Profile updated!");

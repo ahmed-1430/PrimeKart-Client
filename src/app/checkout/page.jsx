@@ -88,11 +88,11 @@ export default function CheckoutPage() {
         };
 
         try {
-            const res = await fetch("http://localhost:3000/api/orders", {
+            const res = await fetch("https://prime-kart-server.vercel.app/api/orders", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`, // ✅ FIXED
+                    Authorization: `Bearer ${token}`, 
                 },
                 body: JSON.stringify(orderData),
             });

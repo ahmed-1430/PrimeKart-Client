@@ -13,7 +13,7 @@ export default function PopularProducts() {
 
     useEffect(() => {
         axios
-            .get("http://localhost:3000/api/products/")
+            .get("https://prime-kart-server.vercel.app/api/products/")
             .then((res) => {
                 // Filter only trending or popular
                 const popular = res.data.filter(

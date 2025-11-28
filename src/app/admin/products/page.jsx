@@ -11,7 +11,7 @@ export default function AdminProducts() {
 
     useEffect(() => {
         axios
-            .get("http://localhost:3000/api/products")
+            .get("https://prime-kart-server.vercel.app/api/products")
             .then((res) => setProducts(res.data))
             .catch(() => setError("Failed to load products"))
             .finally(() => setLoading(false));
@@ -19,7 +19,7 @@ export default function AdminProducts() {
 
     if (loading) {
         return (
-            <div className="p-10 text-center text-xl font-semibold text-gray-600 animate-fadeIn">
+            <div className="p-10 text-center text-xl font-semibold text-gray-600 animate-fadeIn content-center h-screen">
                 Loading products...
             </div>
         );
@@ -34,7 +34,7 @@ export default function AdminProducts() {
     }
 
     return (
-        <div className="p-6 animate-fadeIn">
+        <div className="py-6 w-11/12 mx-auto animate-fadeIn">
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-4xl font-bold text-dark">Products</h1>

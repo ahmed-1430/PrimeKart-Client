@@ -27,7 +27,7 @@ export default function Navbar() {
   // Logged-in user items
   const userMenu = user
     ? [
-        { path: "/my-orders", label: "My Orders" },
+        { path: "/orders", label: "My Orders" },
         { path: "/profile", label: "Profile" },
       ]
     : [];
@@ -35,7 +35,7 @@ export default function Navbar() {
   // Admin-only menu
   const adminMenu =
     user && user.role === "admin"
-      ? [{ path: "/admin/dashboard", label: "Dashboard" }]
+      ? [{ path: "/admin", label: "Dashboard" }]
       : [];
 
   // Helper for active route styling

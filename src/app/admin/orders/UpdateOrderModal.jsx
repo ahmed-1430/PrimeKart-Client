@@ -14,7 +14,7 @@ export default function UpdateOrderModal({ order, onClose, onUpdated }) {
 
     try {
       const res = await axios.put(
-        `http://localhost:3000/api/admin/orders/${order._id}`,
+        `https://prime-kart-server.vercel.app/api/admin/orders/${order._id}`,
         { status }
       );
 

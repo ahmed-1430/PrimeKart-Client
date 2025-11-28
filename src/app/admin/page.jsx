@@ -13,7 +13,7 @@ export default function AdminDashboard() {
     useEffect(() => {
         async function loadSummary() {
             try {
-                const res = await axios.get("http://localhost:3000/api/admin/summary");
+                const res = await axios.get("https://prime-kart-server.vercel.app/api/admin/summary");
                 setSummary(res.data);
             } catch (err) {
                 console.log("Summary error:", err);

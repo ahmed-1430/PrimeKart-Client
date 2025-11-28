@@ -10,7 +10,7 @@ export default function OrderDetailsPage() {
     const [order, setOrder] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/api/orders/single/${id}`).then((res) => {
+        axios.get(`https://prime-kart-server.vercel.app/api/orders/single/${id}`).then((res) => {
             setOrder(res.data);
         });
     }, [id]);

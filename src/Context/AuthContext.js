@@ -9,7 +9,7 @@ import { auth, googleProvider } from "@/lib/FireBase.init";
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
-const API = "http://localhost:3000";
+const API = "https://prime-kart-server.vercel.app";
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
