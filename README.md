@@ -102,9 +102,10 @@ PrimeKart includes a fully‑functional **Express.js + MongoDB server** providin
 
 ---
 
-## Author
+## 👨‍💻 Author
 
-### Ahmed
-Mern Stack | Front-End Developer
+**Ahmed**
+
+*MERN Stack | Front-End Developer*
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Ahmed-blue)](https://www.linkedin.com/in/ahmed1430/)
