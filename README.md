@@ -89,6 +89,7 @@ Contributions, ideas, and improvements are welcome! Feel free to open a PR or is
 
 PrimeKart includes a fully‑functional **Express.js + MongoDB server** providing authentication, product management, and order processing.
 
+<<<<<<< HEAD
 ### 🔐 Authentication & Authorization
 
 * JWT‑based authentication
@@ -174,3 +175,25 @@ Here are meaningful upcoming enhancements that are **not already implemented** i
 * Personalized user feeds
 
 ---
+=======
+### Upcoming Features
+
+* Enhanced Authentication (OAuth, Social Login)
+* Advanced Admin Dashboard
+* Product Analytics & Reporting
+* AI-powered Product Recommendations
+* Order Tracking System
+* Wishlist & Save for Later
+* Real-time Notifications
+* Improved SEO & Performance Optimizations
+
+---
+
+## 👨‍💻 Author
+
+**Ahmed**
+
+*MERN Stack | Front-End Developer*
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Ahmed-blue)](https://www.linkedin.com/in/ahmed1430/)
+>>>>>>> 4619aad962f526ae3ecbceab27bbcafbd9769b09
