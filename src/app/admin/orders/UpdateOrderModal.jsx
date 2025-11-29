@@ -20,7 +20,7 @@ export default function UpdateOrderModal({ order, onClose, onUpdated }) {
 
       onUpdated(res.data);
     } catch (err) {
-      console.log("Order update error", err);
+      // console.log("Order update error", err);
     }
 
     setLoading(false);

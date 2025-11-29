@@ -62,7 +62,7 @@ export default function ProfilePage() {
 
                 setRecentOrders(orders.slice(0, 3));
             } catch (error) {
-                console.log(error);
+                // console.log(error);
             } finally {
                 setLoading(false);
             }

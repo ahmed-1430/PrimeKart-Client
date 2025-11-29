@@ -24,7 +24,7 @@ export default function OrdersPage() {
 
             setOrders(res.data);
         } catch (err) {
-            console.log("Failed to fetch orders:", err?.response?.data || err);
+            // console.log("Failed to fetch orders:", err?.response?.data || err);
         } finally {
             setLoadingOrders(false);
         }

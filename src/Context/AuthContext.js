@@ -61,7 +61,7 @@ export function AuthProvider({ children }) {
                 setUser(res.data); // backend returns user info directly
             })
             .catch(() => {
-                console.log("Invalid or expired token — logging out.");
+                // console.log("Invalid or expired token — logging out.");
                 logout();
             })
             .finally(() => setLoading(false));

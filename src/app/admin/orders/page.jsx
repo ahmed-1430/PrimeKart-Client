@@ -22,7 +22,7 @@ export default function OrdersPage() {
         setOrders(res.data);
         setFiltered(res.data);
       } catch (err) {
-        console.log("Order fetch error:", err);
+        // console.log("Order fetch error:", err);
       }
       setLoading(false);
     }

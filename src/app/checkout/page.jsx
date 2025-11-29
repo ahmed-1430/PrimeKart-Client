@@ -109,7 +109,7 @@ export default function CheckoutPage() {
             router.push("/ordersuccess");
         } catch (err) {
             toast.error("Something went wrong!");
-            console.log(err);
+            // console.log(err);
         }
     };
 

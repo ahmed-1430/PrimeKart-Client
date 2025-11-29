@@ -18,7 +18,7 @@ export default function ProductsPage() {
     axios
       .get("https://prime-kart-server.vercel.app/api/products/")
       .then((res) => setProducts(res.data))
-      .catch((err) => console.log(err))
+      // .catch((err) => console.log(err))
       .finally(() => setLoading(false));
   }, []);
 

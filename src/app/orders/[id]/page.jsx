@@ -30,7 +30,7 @@ export default function OrderDetailsPage() {
 
             setOrder(res.data);
         } catch (err) {
-            console.log("Failed to load order:", err);
+            // console.log("Failed to load order:", err);
         } finally {
             setLoadingOrder(false);
         }
