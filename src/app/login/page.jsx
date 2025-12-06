@@ -26,7 +26,7 @@ export default function LoginPage() {
         const result = await login(form);
 
         if (result.ok) {
-            toast.success("Login Successful 🎉");
+            toast.success("Login Successful");
             router.push("/");
         } else {
             toast.error(result.message || "Invalid email or password");
@@ -41,7 +41,7 @@ export default function LoginPage() {
         const result = await loginWithGoogle();
 
         if (result.ok) {
-            toast.success("Logged in with Google 🎉");
+            toast.success("Logged in with Google");
             router.push("/");
         } else {
             toast.error(result.message);
