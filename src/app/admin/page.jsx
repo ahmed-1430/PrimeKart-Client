@@ -21,7 +21,7 @@ export default function AdminDashboard() {
             setLoading(false);
         }
 
-        if (user?.role === "admin") loadSummary();
+        if (user?.role == "admin") loadSummary();
     }, [user]);
 
     if (!user || user.role !== "admin") {
@@ -84,8 +84,8 @@ export default function AdminDashboard() {
                                     <td className="p-3">
                                         <span
                                             className={`px-3 py-1 rounded-full text-sm ${order.status === "Pending"
-                                                    ? "bg-yellow-200 text-yellow-800"
-                                                    : "bg-green-200 text-green-800"
+                                                ? "bg-yellow-200 text-yellow-800"
+                                                : "bg-green-200 text-green-800"
                                                 }`}
                                         >
                                             {order.status}
