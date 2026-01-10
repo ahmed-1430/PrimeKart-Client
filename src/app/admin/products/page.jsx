@@ -19,8 +19,8 @@ export default function AdminProducts() {
 
     if (loading) {
         return (
-            <div className="p-10 text-center text-xl font-semibold text-gray-600 animate-fadeIn content-center h-screen">
-                Loading products...
+            <div className="h-[60vh] flex items-center justify-center">
+                <div className="animate-spin h-10 w-10 rounded-full border-4 border-purple-500 border-t-transparent" />
             </div>
         );
     }
