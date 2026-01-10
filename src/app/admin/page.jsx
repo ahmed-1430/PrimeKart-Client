@@ -54,7 +54,7 @@ export default function AdminDashboard() {
 
             {/* HEADER */}
             <div className="mb-10">
-                <h1 className="text-4xl font-black bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                <h1 className="text-4xl font-black bg-linear-to-r from-purple-500 to-pink-400 bg-clip-text text-transparent">
                     Admin Dashboard
                 </h1>
                 <p className="text-gray-400 mt-2">
@@ -134,7 +134,7 @@ function GlassCard({ label, value, highlight }) {
                 }`}
         >
             <p className="text-gray-500 text-sm">{label}</p>
-            <h3 className="text-4xl font-extrabold mt-2 bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <h3 className="text-4xl font-extrabold mt-2 bg-linear-to-r from-purple-500 to-pink-400 bg-clip-text text-transparent">
                 {value}
             </h3>
         </div>

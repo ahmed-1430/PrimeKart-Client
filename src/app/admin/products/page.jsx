@@ -27,35 +27,48 @@ export default function AdminProducts() {
 
     if (error) {
         return (
-            <div className="p-10 text-center text-red-600 text-xl animate-fadeIn">
+            <div className="p-10 text-center text-red-400 text-xl">
                 {error}
             </div>
         );
     }
 
     return (
-        <div className="py-6 w-11/12 mx-auto animate-fadeIn">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-4xl font-bold text-dark">Products</h1>
+        <div className="relative min-h-screen">
+            {/* background glow */}
+            <div className="absolute inset-0 -z-10 bg-linear-to-br from-indigo-900/20 via-purple-900/20 to-pink-900/20 blur-3xl" />
+
+            {/* HEADER */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
+                <div>
+                    <h1 className="text-4xl font-black bg-linear-to-r from-purple-500 to-pink-400 bg-clip-text text-transparent">
+                        Products
+                    </h1>
+                    <p className="text-gray-500 mt-1">
+                        Manage all products in your store
+                    </p>
+                </div>
 
                 <Link
                     href="/admin/products/create"
-                    className="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl shadow-md transition-all"
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl
+                    bg-linear-to-r from-purple-600 to-pink-600
+                    text-white font-semibold shadow-lg
+                    hover:scale-105 transition"
                 >
                     + Add Product
                 </Link>
             </div>
 
-            {/* Table Container */}
-            <div className="overflow-x-auto rounded-xl shadow-lg bg-white border border-light">
-                <table className="w-full">
-                    <thead className="bg-light border-b border-gray-200">
-                        <tr>
-                            <th className="p-4 text-left font-semibold text-gray-700">Name</th>
-                            <th className="p-4 text-left font-semibold text-gray-700">Price</th>
-                            <th className="p-4 text-left font-semibold text-gray-700">Stock</th>
-                            <th className="p-4 text-left font-semibold text-gray-700">Actions</th>
+            {/* TABLE */}
+            <div className="glass-panel overflow-x-auto">
+                <table className="w-full min-w-[700px]">
+                    <thead>
+                        <tr className="border-b border-white/10 text-gray-500">
+                            <th className="p-4 text-left">Product</th>
+                            <th className="p-4 text-left">Price</th>
+                            <th className="p-4 text-left">Stock</th>
+                            <th className="p-4 text-left">Actions</th>
                         </tr>
                     </thead>
 
@@ -64,9 +77,9 @@ export default function AdminProducts() {
                             <tr>
                                 <td
                                     colSpan="4"
-                                    className="p-6 text-center text-gray-500 text-lg"
+                                    className="p-8 text-center text-gray-500"
                                 >
-                                    No products found.
+                                    No products found
                                 </td>
                             </tr>
                         )}
@@ -74,23 +87,37 @@ export default function AdminProducts() {
                         {products.map((p) => (
                             <tr
                                 key={p._id}
-                                className="border-b hover:bg-gray-50 transition-all"
+                                className="border-b border-white/5 hover:bg-white/5 transition"
                             >
-                                <td className="p-4 font-medium text-dark">{p.title}</td>
-                                <td className="p-4 text-gray-700">${p.price}</td>
-                                <td className="p-4 text-gray-700">{p.stock ?? "N/A"}</td>
+                                <td className="p-4 font-medium text-slate-500">
+                                    {p.title}
+                                </td>
+
+                                <td className="p-4 text-slate-500 font-semibold">
+                                    ${p.price}
+                                </td>
+
+                                <td className="p-4 text-slate-500">
+                                    {p.stock ?? "N/A"}
+                                </td>
 
                                 <td className="p-4 flex gap-3">
                                     <Link
                                         href={`/admin/products/${p._id}`}
-                                        className="px-4 py-1.5 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-all shadow"
+                                        className="px-4 py-1.5 rounded-lg
+                                        bg-blue-500 backdrop-blur
+                                        text-white text-sm
+                                        hover:bg-blue-500/80 transition"
                                     >
                                         View
                                     </Link>
 
                                     <Link
                                         href={`/admin/products/${p._id}?edit=true`}
-                                        className="px-4 py-1.5 rounded-lg bg-green-500 text-white hover:bg-green-600 transition-all shadow"
+                                        className="px-4 py-1.5 rounded-lg
+                                        bg-green-500 backdrop-blur
+                                        text-white text-sm
+                                        hover:bg-green-500/80 transition"
                                     >
                                         Edit
                                     </Link>
