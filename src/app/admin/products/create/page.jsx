@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState } from "react";
@@ -6,7 +7,7 @@ import { toast } from "react-toastify";
 import { useAuth } from "@/Context/AuthContext";
 
 export default function CreateProductPage() {
-    const { token } = useAuth(); // always use context token (much safer)
+    const { token } = useAuth();
     const [loading, setLoading] = useState(false);
 
     const [form, setForm] = useState({
@@ -23,13 +24,11 @@ export default function CreateProductPage() {
     };
 
     const handleSubmit = async () => {
-        // Validate required fields
         if (!form.title.trim() || !form.price.trim()) {
             toast.error("Title & Price are required!");
             return;
         }
 
-        // Ensure admin is logged in
         if (!token) {
             toast.error("Unauthorized! Please login again.");
             return;
@@ -38,19 +37,18 @@ export default function CreateProductPage() {
         try {
             setLoading(true);
 
-            const res = await axios.post(
+            await axios.post(
                 "https://prime-kart-server.vercel.app/api/admin/products",
                 form,
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`, // correct token
+                        Authorization: `Bearer ${token}`,
                     },
                 }
             );
 
             toast.success("Product created successfully 🎉");
 
-            // Reset form
             setForm({
                 title: "",
                 price: "",
@@ -59,7 +57,6 @@ export default function CreateProductPage() {
                 image: "",
                 description: "",
             });
-
         } catch (err) {
             toast.error(
                 err?.response?.data?.message || "Failed to create product"
@@ -70,82 +67,132 @@ export default function CreateProductPage() {
     };
 
     return (
-        <div className="max-w-3xl mx-auto p-6 animate-fadeIn">
-            <h1 className="text-4xl font-bold mb-8 text-dark">
-                Add New Product
-            </h1>
+        <div className="relative min-h-screen">
+            {/* background glow */}
+            <div className="absolute inset-0 -z-10 bg-linear-to-br from-purple-900/20 via-pink-900/20 to-indigo-900/20 blur-3xl" />
 
-            <div className="bg-white shadow-xl rounded-2xl p-8 border border-gray-200">
+            {/* HEADER */}
+            <div className="w-11/12 mx-auto mb-10">
+                <h1 className="text-4xl font-black bg-linear-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+                    Add New Product
+                </h1>
+                <p className="text-slate-500 mt-2">
+                    Create and publish a new product in your store
+                </p>
+            </div>
 
-                <div className="grid gap-5">
-
-                    {/* Title */}
-                    <input
+            {/* FORM */}
+            <div className="max-w-11/12 mx-auto glass-panel">
+                <div className="grid gap-6">
+                    {/* TITLE */}
+                    <Input
+                        label="Product Title"
                         name="title"
                         value={form.title}
                         onChange={handleChange}
-                        placeholder="Product Title"
-                        className="border p-3 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none"
+                        placeholder="Premium Headphones"
                     />
 
-                    {/* Image */}
-                    <input
+                    {/* IMAGE */}
+                    <Input
+                        label="Image URL"
                         name="image"
                         value={form.image}
                         onChange={handleChange}
-                        placeholder="Image URL"
-                        className="border p-3 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none"
+                        placeholder="https://example.com/image.jpg"
                     />
 
-                    {/* Price */}
-                    <input
-                        name="price"
-                        type="number"
-                        value={form.price}
-                        onChange={handleChange}
-                        placeholder="Price"
-                        className="border p-3 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none"
-                    />
+                    {/* IMAGE PREVIEW */}
+                    {form.image && (
+                        <div className="rounded-xl overflow-hidden border border-white/10">
+                            <img
+                                src={form.image}
+                                alt="Preview"
+                                className="w-full h-56 object-cover"
+                            />
+                        </div>
+                    )}
 
-                    {/* Stock */}
-                    <input
-                        name="stock"
-                        type="number"
-                        value={form.stock}
-                        onChange={handleChange}
-                        placeholder="Stock Quantity"
-                        className="border p-3 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none"
-                    />
+                    {/* PRICE + STOCK */}
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <Input
+                            label="Price ($)"
+                            name="price"
+                            type="number"
+                            value={form.price}
+                            onChange={handleChange}
+                            placeholder="199"
+                        />
 
-                    {/* Category */}
-                    <input
+                        <Input
+                            label="Stock Quantity"
+                            name="stock"
+                            type="number"
+                            value={form.stock}
+                            onChange={handleChange}
+                            placeholder="50"
+                        />
+                    </div>
+
+                    {/* CATEGORY */}
+                    <Input
+                        label="Category"
                         name="category"
                         value={form.category}
                         onChange={handleChange}
-                        placeholder="Category"
-                        className="border p-3 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none"
+                        placeholder="Electronics"
                     />
 
-                    {/* Description */}
-                    <textarea
-                        name="description"
-                        value={form.description}
-                        onChange={handleChange}
-                        placeholder="Description"
-                        className="border p-3 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none h-32"
-                    />
+                    {/* DESCRIPTION */}
+                    <div>
+                        <label className="block mb-2 text-sm font-medium text-slate-500">
+                            Description
+                        </label>
+                        <textarea
+                            name="description"
+                            value={form.description}
+                            onChange={handleChange}
+                            placeholder="Write a short product description..."
+                            className="w-full h-32 px-4 py-3 rounded-xl
+                            bg-white/10 backdrop-blur border border-slate-400/20
+                            text-white outline-none resize-none
+                            focus:ring-2 focus:ring-purple-500"
+                        />
+                    </div>
 
-                    {/* Button */}
+                    {/* SUBMIT */}
                     <button
                         disabled={loading}
                         onClick={handleSubmit}
-                        className="bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-xl font-semibold shadow-md transition disabled:opacity-50"
+                        className="mt-4 w-full py-3 rounded-xl
+                        bg-linear-to-r from-purple-600 to-pink-600
+                        text-white font-semibold text-lg
+                        hover:scale-[1.02] transition
+                        disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     >
-                        {loading ? "Please wait..." : "Create Product"}
+                        {loading ? "Creating Product..." : "Create Product"}
                     </button>
                 </div>
-
             </div>
+        </div>
+    );
+}
+
+/* -------- REUSABLE INPUT -------- */
+
+function Input({ label, ...props }) {
+    return (
+        <div>
+            <label className="block mb-2 text-sm font-medium text-slate-500">
+                {label}
+            </label>
+            <input
+                {...props}
+                className="w-full px-4 py-3 rounded-xl
+                bg-white/10 backdrop-blur border border-slate-400/40
+                text-slate-500 outline-none
+                focus:ring-2 focus:ring-purple-500"
+            />
         </div>
     );
 }
