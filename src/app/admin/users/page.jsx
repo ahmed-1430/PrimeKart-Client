@@ -50,33 +50,64 @@ export default function UsersPage() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto p-6">
-            <h1 className="text-3xl font-bold mb-6">Users</h1>
+        <div className="relative min-h-screen p-8">
+            {/* background glow */}
+            <div className="absolute inset-0 -z-10 bg-gradient-to-br from-purple-900/20 via-pink-900/20 to-indigo-900/20 blur-3xl" />
 
-            <div className="space-y-4">
+            {/* HEADER */}
+            <div className="max-w-5xl mx-auto mb-10">
+                <h1 className="text-4xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    Users
+                </h1>
+                <p className="text-gray-400 mt-2">
+                    Manage registered users and roles
+                </p>
+            </div>
+
+            {/* USERS LIST */}
+            <div className="max-w-5xl mx-auto space-y-4">
                 {users.map((u) => (
                     <div
-                        key={u._id}
-                        className="border p-4 rounded-lg shadow-sm bg-white flex justify-between items-center hover:shadow-md transition"
+                        key={u.id || u._id}
+                        className="glass-panel flex items-center justify-between
+                        hover:scale-[1.02] transition"
                     >
-                        <div>
-                            <p className="font-bold text-lg">{u.name}</p>
-                            <p className="text-gray-600">{u.email}</p>
-                            <p className="text-sm text-gray-500">
-                                Role: <span className="font-medium">{u.role}</span>
-                            </p>
+                        {/* USER INFO */}
+                        <div className="flex items-center gap-4">
+                            {/* AVATAR */}
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500
+                            flex items-center justify-center text-white font-bold text-lg shadow-md">
+                                {u.name?.charAt(0).toUpperCase()}
+                            </div>
+
+                            <div>
+                                <p className="font-semibold text-lg text-white">
+                                    {u.name}
+                                </p>
+                                <p className="text-gray-400 text-sm">
+                                    {u.email}
+                                </p>
+                            </div>
                         </div>
 
+                        {/* ROLE */}
                         <span
-                            className={`px-3 py-1 text-sm rounded-full ${u.role === "admin"
-                                ? "bg-purple-200 text-purple-700"
-                                : "bg-gray-200 text-gray-700"
+                            className={`px-4 py-1.5 rounded-full text-sm font-semibold backdrop-blur
+                            ${u.role === "admin"
+                                    ? "bg-purple-400/20 text-purple-300 border border-purple-400/30"
+                                    : "bg-white/10 text-gray-300 border border-white/20"
                                 }`}
                         >
                             {u.role}
                         </span>
                     </div>
                 ))}
+
+                {users.length === 0 && (
+                    <div className="py-12 text-center text-gray-400">
+                        No users found
+                    </div>
+                )}
             </div>
         </div>
     );
