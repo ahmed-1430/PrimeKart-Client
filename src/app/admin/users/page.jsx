@@ -3,26 +3,23 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/Context/AuthContext";
 
 export default function UsersPage() {
+    const { token, loading } = useAuth();
     const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
+    const [pageLoading, setPageLoading] = useState(true);
 
     useEffect(() => {
+        if (loading) return;
+
         async function loadUsers() {
             try {
-                const token = localStorage.getItem("token");
-
-                // ❌ Token missing → stop + redirect
                 if (!token) {
                     toast.error("Unauthorized! Please login again.");
-                    router.push("/login");
                     return;
                 }
 
-                // ✅ Fetch users with token
                 const res = await axios.get(
                     "https://prime-kart-server.vercel.app/api/admin/users",
                     {
@@ -35,26 +32,16 @@ export default function UsersPage() {
                 setUsers(res.data);
             } catch (err) {
                 console.log("Users load error:", err);
-
-                // 401 or token expired
-                if (err.response?.status === 401) {
-                    toast.error("Session expired! Please login again.");
-                    localStorage.removeItem("token");
-                    router.push("/login");
-                    return;
-                }
-
-                toast.error("Failed to load users.");
+                toast.error("Failed to load users");
             } finally {
-                setLoading(false);
+                setPageLoading(false);
             }
         }
 
         loadUsers();
-    }, [router]);
+    }, [token, loading]);
 
-    // LOADING UI
-    if (loading) {
+    if (loading || pageLoading) {
         return (
             <div className="h-[60vh] flex items-center justify-center">
                 <div className="animate-spin h-10 w-10 rounded-full border-4 border-purple-500 border-t-transparent"></div>
@@ -82,8 +69,8 @@ export default function UsersPage() {
 
                         <span
                             className={`px-3 py-1 text-sm rounded-full ${u.role === "admin"
-                                    ? "bg-purple-200 text-purple-700"
-                                    : "bg-gray-200 text-gray-700"
+                                ? "bg-purple-200 text-purple-700"
+                                : "bg-gray-200 text-gray-700"
                                 }`}
                         >
                             {u.role}
