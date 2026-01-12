@@ -50,13 +50,13 @@ export default function UsersPage() {
     }
 
     return (
-        <div className="relative min-h-screen p-8">
+        <div className="relative min-h-screen">
             {/* background glow */}
-            <div className="absolute inset-0 -z-10 bg-gradient-to-br from-purple-900/20 via-pink-900/20 to-indigo-900/20 blur-3xl" />
+            <div className="absolute inset-0 -z-10 bg-linear-to-br from-purple-900/20 via-pink-900/20 to-indigo-900/20 blur-3xl" />
 
             {/* HEADER */}
-            <div className="max-w-5xl mx-auto mb-10">
-                <h1 className="text-4xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <div className="w-11/12 mx-auto mb-10">
+                <h1 className="text-4xl font-black bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                     Users
                 </h1>
                 <p className="text-gray-400 mt-2">
@@ -65,7 +65,7 @@ export default function UsersPage() {
             </div>
 
             {/* USERS LIST */}
-            <div className="max-w-5xl mx-auto space-y-4">
+            <div className="w-11/12 mx-auto space-y-4">
                 {users.map((u) => (
                     <div
                         key={u.id || u._id}
@@ -75,16 +75,16 @@ export default function UsersPage() {
                         {/* USER INFO */}
                         <div className="flex items-center gap-4">
                             {/* AVATAR */}
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500
+                            <div className="w-12 h-12 rounded-full bg-linear-to-br from-purple-500 to-pink-500
                             flex items-center justify-center text-white font-bold text-lg shadow-md">
                                 {u.name?.charAt(0).toUpperCase()}
                             </div>
 
                             <div>
-                                <p className="font-semibold text-lg text-white">
+                                <p className="font-semibold text-lg text-slate-500">
                                     {u.name}
                                 </p>
-                                <p className="text-gray-400 text-sm">
+                                <p className="text-slate-400 text-sm">
                                     {u.email}
                                 </p>
                             </div>
@@ -94,8 +94,8 @@ export default function UsersPage() {
                         <span
                             className={`px-4 py-1.5 rounded-full text-sm font-semibold backdrop-blur
                             ${u.role === "admin"
-                                    ? "bg-purple-400/20 text-purple-300 border border-purple-400/30"
-                                    : "bg-white/10 text-gray-300 border border-white/20"
+                                    ? "bg-purple-400/20 text-purple-500 border border-purple-500/40"
+                                    : "bg-pink-300/10 text-gray-400 border border-pink-400/20"
                                 }`}
                         >
                             {u.role}
